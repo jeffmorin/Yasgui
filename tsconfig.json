@@ -13,6 +13,7 @@
     "outDir": "./build/ts",
     "rootDir": ".",
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "paths": {
       "@zazuko/yasgui": ["./packages/yasgui/src"],
       "@zazuko/yasgui-utils": ["./packages/utils/src"],

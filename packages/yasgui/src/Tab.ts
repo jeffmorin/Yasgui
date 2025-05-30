@@ -178,7 +178,7 @@ export class Tab extends EventEmitter {
   }
   private initTabSettingsMenu() {
     if (!this.rootEl || !this.controlBarEl)
-      throw new Error("Need to initialize wrapper elements before drawing tab pabel");
+      throw new Error("Need to initialize wrapper elements before drawing tab panel");
     this.tabPanel = new TabPanel(this, this.rootEl, this.controlBarEl);
   }
 

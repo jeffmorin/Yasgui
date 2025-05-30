@@ -3,6 +3,8 @@ import { default as Yasgui, getRandomId } from "./";
 import Tab from "./Tab";
 import { TabListEl } from "./TabElements";
 import { cloneDeep } from "lodash-es";
+import i18next from "i18next";
+
 require("./TabContextMenu.scss");
 export interface TabContextConfig {
   name: string;
@@ -41,19 +43,20 @@ export default class TabContextMenu {
     const dropDownList = document.createElement("ul");
     addClass(dropDownList, "context-menu-list");
 
-    this.newTabEl = this.getMenuItemEl("New Tab");
+    this.newTabEl = this.getMenuItemEl(i18next.t("tab.new"));
     // We can set the function for addTab here already, as it doesn't need any outside data
     this.newTabEl.onclick = () => this.yasgui.addTab(true);
 
-    this.renameTabEl = this.getMenuItemEl("Rename Tab");
+    //this.renameTabEl = this.getMenuItemEl("Rename Tab");
+    this.renameTabEl = this.getMenuItemEl(i18next.t("tab.rename"));
 
-    this.copyTabEl = this.getMenuItemEl("Copy Tab");
+    this.copyTabEl = this.getMenuItemEl(i18next.t("tab.copy"));
 
-    this.closeTabEl = this.getMenuItemEl("Close Tab");
+    this.closeTabEl = this.getMenuItemEl(i18next.t("tab.close"));
 
-    this.closeOtherTabsEl = this.getMenuItemEl("Close other tabs");
+    this.closeOtherTabsEl = this.getMenuItemEl(i18next.t("tab.closeOthers"));
 
-    this.reOpenOldTab = this.getMenuItemEl("Undo close Tab");
+    this.reOpenOldTab = this.getMenuItemEl(i18next.t("tab.undoClose"));
 
     // Add items to list
     dropDownList.appendChild(this.newTabEl);

@@ -5,6 +5,7 @@ import { addClass } from "@zazuko/yasgui-utils";
 require("./endpointSelect.scss");
 import parse from "autosuggest-highlight/parse";
 import DOMPurify from "dompurify";
+import i18next from "i18next";
 
 //Export this here instead of from our custom-types folder of autocomplete-js
 //as this interface is exported via the yasgui config. The custom typings are
@@ -92,7 +93,7 @@ export class EndpointSelect extends EventEmitter {
 
     // Init autocomplete library
     new Autocomplete<CatalogueItem>({
-      placeholder: "Search or add an endpoint",
+      placeholder: i18next.t("selectEndpointPlaceholder"),
       highlight: false,
       maxResults: 100,
       trigger: {

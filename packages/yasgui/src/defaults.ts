@@ -3,20 +3,10 @@ import Yasr from "@zazuko/yasr";
 import { default as Yasqe } from "@zazuko/yasqe";
 import { CatalogueItem } from "./endpointSelect";
 import i18next from "i18next";
+import i18n from "./i18n.json";
 
 i18next.init({
-  resources: {
-    en: {
-      translation: {
-        Query: "Query",
-      },
-    },
-    fr: {
-      translation: {
-        Query: "Requête",
-      },
-    },
-  },
+  resources: i18n,
   lng: "en", // Default language
   fallbackLng: "en",
   interpolation: { escapeValue: false },
@@ -42,7 +32,7 @@ export default function initialize(): Config<CatalogueItem> {
       }
       return "yagui_" + id;
     },
-    tabName: i18next.t("Query"),
+    tabName: i18next.t("query"),
     corsProxy: undefined,
     persistencyExpire: 60 * 60 * 24 * 30,
     persistenceLabelResponse: "response",

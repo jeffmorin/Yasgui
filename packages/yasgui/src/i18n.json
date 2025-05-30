@@ -1,0 +1,26 @@
+{
+    "en": {
+      "translation": {
+        "query": "Query",
+        "selectEndpointPlaceholder": "Search or add an endpoint",
+        "tab.new": "New Tab",
+        "tab.rename": "Rename Tab",
+        "tab.copy": "Copy Tab",
+        "tab.close": "Close Tab",
+        "tab.closeOthers": "Close other tabs",
+        "tab.undoClose": "Undo close Tab"
+      }
+    },
+    "fr": {
+      "translation": {
+        "query": "Requête",
+        "selectEndpointPlaceholder": "Recherchez ou sélectionnez un point d'accès",
+        "tab.new": "Nouvel onglet",
+        "tab.rename": "Renommer l'onglet",
+        "tab.copy": "Copier l'onglet",
+        "tab.close": "Fermer l'onglet",
+        "tab.closeOthers": "Fermer les autres onglets",
+        "tab.undoClose": "Annuler la fermeture de l'onglet"
+      }
+    }
+  }
