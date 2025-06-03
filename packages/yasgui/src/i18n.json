@@ -2,7 +2,8 @@
     "en": {
       "translation": {
         "query": "Query",
-        "selectEndpointPlaceholder": "Search or add an endpoint",
+        "endpoint.selectPlaceholder": "Search or add an endpoint",
+        "endpoint.enterToAdd": "Press \"enter\" to add this endpoint",
         "tab.new": "New Tab",
         "tab.rename": "Rename Tab",
         "tab.copy": "Copy Tab",
@@ -14,7 +15,8 @@
     "fr": {
       "translation": {
         "query": "Requête",
-        "selectEndpointPlaceholder": "Recherchez ou sélectionnez un point d'accès",
+        "endpoint.selectPlaceholder": "Recherchez ou sélectionnez un point d'accès",
+        "endpoint.enterToAdd": "Appuyez sur «Enter» pour ajouter le point d'accès",
         "tab.new": "Nouvel onglet",
         "tab.rename": "Renommer l'onglet",
         "tab.copy": "Copier l'onglet",
