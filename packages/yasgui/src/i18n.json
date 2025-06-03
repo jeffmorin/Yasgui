@@ -2,6 +2,7 @@
     "en": {
       "translation": {
         "query": "Query",
+        "share.query": "Share Query",
         "endpoint.selectPlaceholder": "Search or add an endpoint",
         "endpoint.enterToAdd": "Press \"enter\" to add this endpoint",
         "tab.new": "New Tab",
@@ -15,6 +16,7 @@
     "fr": {
       "translation": {
         "query": "Requête",
+        "share.query": "Partager la requête",
         "endpoint.selectPlaceholder": "Recherchez ou sélectionnez un point d'accès",
         "endpoint.enterToAdd": "Appuyez sur «Enter» pour ajouter le point d'accès",
         "tab.new": "Nouvel onglet",
