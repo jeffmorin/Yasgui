@@ -93,7 +93,7 @@ export class EndpointSelect extends EventEmitter {
 
     // Init autocomplete library
     new Autocomplete<CatalogueItem>({
-      placeholder: i18next.t("selectEndpointPlaceholder"),
+      placeholder: i18next.t("endpoint.selectPlaceholder"),
       highlight: false,
       maxResults: 100,
       trigger: {
@@ -191,7 +191,7 @@ export class EndpointSelect extends EventEmitter {
         if (container) {
           const noResults = document.createElement("div");
           addClass(noResults, "noResults");
-          noResults.innerText = 'Press "enter" to add this endpoint';
+          noResults.innerText = i18next.t("endpoint.enterToAdd");
           container.appendChild(noResults);
         }
       },

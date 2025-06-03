@@ -11,7 +11,7 @@ export interface PopulatedAjaxConfig {
   withCredentials: boolean;
 }
 function getRequestConfigSettings(yasqe: Yasqe, conf?: Partial<Config["requestConfig"]>): RequestConfig<Yasqe> {
-  return isFunction(conf) ? conf(yasqe) : conf;
+  return isFunction(conf) ? conf(yasqe) : conf as RequestConfig<Yasqe>;
 }
 // type callback = AjaxConfig.callbacks['complete'];
 export function getAjaxConfig(
