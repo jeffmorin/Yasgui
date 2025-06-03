@@ -2,6 +2,7 @@
     "en": {
       "translation": {
         "query": "Query",
+        "share.query": "Share Query",
         "selectEndpointPlaceholder": "Search or add an endpoint",
         "tab.new": "New Tab",
         "tab.rename": "Rename Tab",
@@ -14,6 +15,7 @@
     "fr": {
       "translation": {
         "query": "Requête",
+        "share.query": "Partager la requête",
         "selectEndpointPlaceholder": "Recherchez ou sélectionnez un point d'accès",
         "tab.new": "Nouvel onglet",
         "tab.rename": "Renommer l'onglet",

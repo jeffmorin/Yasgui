@@ -16,6 +16,7 @@ import { merge, escape } from "lodash-es";
 import getDefaults from "./defaults";
 import CodeMirror from "./CodeMirror";
 import { YasqeAjaxConfig } from "./sparql";
+import i18next from "i18next";
 
 export interface Yasqe {
   on(eventName: "query", handler: (instance: Yasqe, req: Request, abortController?: AbortController) => void): void;
@@ -199,11 +200,20 @@ export class Yasqe extends CodeMirror {
      * draw share link button
      */
     if (this.config.createShareableLink) {
+      const requetesEnregistreesBtn = document.createElement("button");
+      requetesEnregistreesBtn.className = "yasqe_custom";
+      requetesEnregistreesBtn.title = "Custom Action";
+      requetesEnregistreesBtn.innerHTML = `<span>&#x1F4C1;</span>`;
+      requetesEnregistreesBtn.onclick = () => {
+        //this.handleCustomAction();
+      };
+      buttons.appendChild(requetesEnregistreesBtn);
+
       var svgShare = drawSvgStringAsElement(imgs.share);
       const shareLinkWrapper = document.createElement("button");
       shareLinkWrapper.className = "yasqe_share";
-      shareLinkWrapper.title = "Share query";
-      shareLinkWrapper.setAttribute("aria-label", "Share query");
+      shareLinkWrapper.title = i18next.t("share.query");
+      shareLinkWrapper.setAttribute("aria-label", i18next.t("share.query"));
       shareLinkWrapper.appendChild(svgShare);
       buttons.appendChild(shareLinkWrapper);
       shareLinkWrapper.addEventListener("click", (event: MouseEvent) => showSharePopup(event));
