@@ -10,7 +10,8 @@
         "tab.copy": "Copy Tab",
         "tab.close": "Close Tab",
         "tab.closeOthers": "Close other tabs",
-        "tab.undoClose": "Undo close Tab"
+        "tab.undoClose": "Undo close Tab",
+        "yasr.response": "Response"
       }
     },
     "fr": {
@@ -24,7 +25,8 @@
         "tab.copy": "Copier l'onglet",
         "tab.close": "Fermer l'onglet",
         "tab.closeOthers": "Fermer les autres onglets",
-        "tab.undoClose": "Annuler la fermeture de l'onglet"
+        "tab.undoClose": "Annuler la fermeture de l'onglet",
+        "yasr.response": "Réponse"
       }
     }
   }

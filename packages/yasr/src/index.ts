@@ -15,6 +15,7 @@ export { default as Parser } from "./parsers";
 import { addScript, addCss, sanitize } from "./helpers";
 import * as faDownload from "@fortawesome/free-solid-svg-icons/faDownload";
 import * as faQuestionCircle from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
+import i18next from "i18next";
 require("./main.scss");
 
 export interface PersistentConfig {
@@ -167,7 +168,7 @@ export class Yasr extends EventEmitter {
   private getCompatiblePlugins(): string[] {
     if (!this.results)
       return Object.keys(
-        filter(this.config.plugins, (val) => (typeof val === "object" && val.enabled) || (val as any) === true)
+        filter(this.config.plugins, (val) => (typeof val === "object" && val.enabled) || (val as any) === true),
       );
 
     const supportedPlugins: { name: string; priority: number }[] = [];
@@ -222,7 +223,7 @@ export class Yasr extends EventEmitter {
             this.updatePluginSelectors(compatiblePlugins);
           }
         },
-        (_e) => console.error
+        (_e) => console.error,
       );
     } else {
       this.resultsEl.textContent = "cannot render result";
@@ -398,7 +399,7 @@ export class Yasr extends EventEmitter {
       }
       const responseTime = this.results.getResponseTime();
       if (responseTime) {
-        if (!innerText) innerText = "Response";
+        if (!innerText) innerText = i18next.t("yasr.response");
         const time = responseTime / 1000;
         innerText += ` in ${time} second${time === 1 ? "" : "s"}`;
       }
@@ -499,7 +500,7 @@ export class Yasr extends EventEmitter {
         storageId,
         this.getPersistentConfig(),
         this.config.persistencyExpire,
-        this.handleLocalStorageQuotaFull
+        this.handleLocalStorageQuotaFull,
       );
     }
   }
