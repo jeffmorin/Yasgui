@@ -395,13 +395,15 @@ export class Yasr extends EventEmitter {
       removeClass(this.dataElement, "empty");
       const bindings = this.results.getBindings();
       if (bindings) {
-        innerText += `${bindings.length} result${bindings.length === 1 ? "" : "s"}`; // Set amount of results
+        //innerText += `${bindings.length} result${bindings.length === 1 ? "" : "s"}`; // Set amount of results
+        innerText += i18next.t("yasr.results.count", { count: bindings.length }); // Set amount of results
       }
       const responseTime = this.results.getResponseTime();
       if (responseTime) {
         if (!innerText) innerText = i18next.t("yasr.response");
         const time = responseTime / 1000;
-        innerText += ` in ${time} second${time === 1 ? "" : "s"}`;
+        //innerText += ` in ${time} second${time === 1 ? "" : "s"}`;
+        innerText += " " + i18next.t("yasr.results.seconds", { count: time });
       }
     } else {
       addClass(this.dataElement, "empty");
