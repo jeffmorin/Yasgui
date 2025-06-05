@@ -1,6 +1,8 @@
 import Yasgui from "./";
 import TabContextMenu from "./TabContextMenu";
 import { hasClass, addClass, removeClass } from "@zazuko/yasgui-utils";
+import i18next from "i18next";
+
 const sortablejs = require("sortablejs");
 require("./TabElements.scss");
 export interface TabList {}
@@ -111,7 +113,7 @@ export class TabListEl {
     //tab close btn
     const closeBtn = document.createElement("div");
     closeBtn.innerHTML = "&#x2716;";
-    closeBtn.title = "Close tab";
+    closeBtn.title = i18next.t("tab.close.tooltip");
     closeBtn.setAttribute("tabindex", "-1");
     closeBtn.setAttribute("aria-hidden", "true");
     addClass(closeBtn, "closeTab");
@@ -254,8 +256,8 @@ export class TabList {
     const addTabLink = document.createElement("button");
     addTabLink.className = "addTab";
     addTabLink.textContent = "+";
-    addTabLink.title = "Add tab";
-    addTabLink.setAttribute("aria-label", "Add a new tab");
+    addTabLink.title = i18next.t("tab.add.tooltip");
+    addTabLink.setAttribute("aria-label", i18next.t("tab.add"));
     addTabLink.addEventListener("click", this.handleAddNewTab);
     addTabLink.addEventListener("focus", () => {
       // sets aria tabEntryIndex to active tab
@@ -270,7 +272,7 @@ export class TabList {
     this._tabsListEl.appendChild(this.addTabEl);
     this.tabContextMenu = TabContextMenu.get(
       this.yasgui,
-      this.yasgui.config.contextMenuContainer ? this.yasgui.config.contextMenuContainer : this._tabsListEl
+      this.yasgui.config.contextMenuContainer ? this.yasgui.config.contextMenuContainer : this._tabsListEl,
     );
     return this._tabsListEl;
   }
@@ -315,7 +317,7 @@ export class TabList {
     if (index !== undefined && index < this.yasgui.persistentConfig.getTabs().length - 1) {
       this._tabsListEl?.insertBefore(
         this._tabs[tabId].draw(tabConf.name),
-        this._tabs[this.yasgui.persistentConfig.getTabs()[index + 1]].tabEl || null
+        this._tabs[this.yasgui.persistentConfig.getTabs()[index + 1]].tabEl || null,
       );
     } else {
       this._tabsListEl?.insertBefore(this._tabs[tabId].draw(tabConf.name), this.addTabEl || null);

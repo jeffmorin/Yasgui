@@ -6,12 +6,26 @@
         "endpoint.selectPlaceholder": "Search or add an endpoint",
         "endpoint.enterToAdd": "Press \"enter\" to add this endpoint",
         "tab.new": "New Tab",
+        "tab.add": "Add a new tab",
+        "tab.add.tooltip": "Add tab",
         "tab.rename": "Rename Tab",
         "tab.copy": "Copy Tab",
         "tab.close": "Close Tab",
+        "tab.close.tooltip": "Close tab",
         "tab.closeOthers": "Close other tabs",
         "tab.undoClose": "Undo close Tab",
-        "yasr.response": "Response"
+        "settings.open": "Open settings",
+        "settings.close": "Close settings",
+        "settings.httpMethod": "Request method",
+        "settings.acceptHeaders": "Accept Headers",
+        "settings.arguments": "Arguments",
+        "settings.arguments.header": "Header Arguments",
+        "settings.graphs.default": "Default Graphs",
+        "settings.graphs.named": "Named Graphs",
+        "yasr.response": "Response",
+        "error.http.endpoint": "You are trying to query an HTTP endpoint (<a href=\"{{ endpoint }}\" target=\"_blank\" rel=\"noopener noreferrer\">{{ endpoint }}</a>) from an HTTP<strong>S</strong> website (<a href=\"{{ here }}\">{{ here }}</a>).",
+        "error.http.endpoint.notAllowed": "This is not allowed in modern browsers, see <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy\">https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy</a>.",
+        "error.http.workaround": "As a workaround, you can use the HTTP version of Yasgui instead:"
       }
     },
     "fr": {
@@ -21,12 +35,26 @@
         "endpoint.selectPlaceholder": "Recherchez ou sélectionnez un point d'accès",
         "endpoint.enterToAdd": "Appuyez sur «Enter» pour ajouter le point d'accès",
         "tab.new": "Nouvel onglet",
+        "tab.add": "Ajouter un nouvel onglet",
+        "tab.add.tooltip": "Ajouter un onglet",
         "tab.rename": "Renommer l'onglet",
         "tab.copy": "Copier l'onglet",
         "tab.close": "Fermer l'onglet",
+        "tab.close.tooltip": "Fermer l'onglet",
         "tab.closeOthers": "Fermer les autres onglets",
         "tab.undoClose": "Annuler la fermeture de l'onglet",
-        "yasr.response": "Réponse"
+        "settings.open": "Ouvrir les préférences",
+        "settings.close": "Fermer les préférences",
+        "settings.httpMethod": "Méthode HTTP",
+        "settings.acceptHeaders": "En-têtes Accept",
+        "settings.arguments": "Arguments",
+        "settings.arguments.header": "Arguments d'en-tête",
+        "settings.graphs.default": "Graphes par défaut",
+        "settings.graphs.named": "Graphes nommés",
+        "yasr.response": "Réponse",
+        "error.http.endpoint": "Vous tentez d'interroger un point d'accès HTTP (<a href=\"{{ endpoint }}\" target=\"_blank\" rel=\"noopener noreferrer\">{{ endpoint }}</a>) à partir d'un site HTTP<strong>S</strong> (<a href=\"{{ here }}\">{{ here }}</a>).",
+        "error.http.endpoint.notAllowed": "Cela n'est pas permis avec les navigateurs modernes, voir <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy\">https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy</a>.",
+        "error.http.workaround": "Afin de contourner l'erreur, vous pouvez utiliser la version HTTP de Yasgui:"
       }
     }
   }
