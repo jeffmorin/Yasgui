@@ -30,8 +30,11 @@ module.exports = defineConfig([
       },
     },
 
-    //extends: compat.extends("prettier/@typescript-eslint"),
-    extends: compat.extends("prettier"),
+    extends: [
+      compat.extends("prettier"),
+      // Requiert du reformatage intensif si activé
+      //compat.extends("plugin:prettier/recommended")
+    ],
 
     plugins: {
       "@typescript-eslint": typescriptEslint,
