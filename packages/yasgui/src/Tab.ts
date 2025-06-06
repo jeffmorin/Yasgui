@@ -521,15 +521,15 @@ function getCorsErrorRenderer(tab: Tab) {
       if (shouldReferToHttp) {
         const errorEl = document.createElement("div");
         const errorSpan = document.createElement("p");
-        const msgError = i18next.t("error.http.endpoint", {
+        const msgError = i18next.t("yasgui.error.http.endpoint", {
           endpoint: safeEndpoint(tab.getEndpoint()),
           here: safeEndpoint(window.location.href),
         });
-        const msgNotAllowed = i18next.t("error.http.endpoint.notAllowed");
+        const msgNotAllowed = i18next.t("yasgui.error.http.endpoint.notAllowed");
         errorSpan.innerHTML = `${msgError}<br>${msgNotAllowed}`;
         if (tab.yasgui.config.nonSslDomain) {
           const errorLink = document.createElement("p");
-          const msgError = i18next.t("error.http.workaround");
+          const msgError = i18next.t("yasgui.error.http.workaround");
           const shareableLink = tab.getShareableLink(tab.yasgui.config.nonSslDomain);
           errorLink.innerHTML = `${msgError} <a href="${shareableLink}" target="_blank">${shareableLink}</a>`;
           errorSpan.appendChild(errorLink);

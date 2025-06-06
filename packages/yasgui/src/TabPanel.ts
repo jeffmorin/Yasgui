@@ -127,7 +127,7 @@ export default class TabPanel {
   private toggleAriaSettings() {
     this.settingsButton.setAttribute(
       "aria-label",
-      this.isOpen ? i18next.t("settings.close") : i18next.t("settings.openm"),
+      this.isOpen ? i18next.t("yasgui.settings.close") : i18next.t("yasgui.settings.open"),
     );
     this.settingsButton.setAttribute("aria-expanded", `${this.isOpen}`);
   }
@@ -135,7 +135,7 @@ export default class TabPanel {
   private drawRequestMethodSelector() {
     const requestTypeWrapper = document.createElement("div");
     addClass(requestTypeWrapper, "requestConfigWrapper");
-    createLabel(i18next.t("settings.httpMethod"), requestTypeWrapper);
+    createLabel(i18next.t("yasgui.settings.httpMethod"), requestTypeWrapper);
 
     // Create Button
     const getButton = document.createElement("button");
@@ -175,7 +175,7 @@ export default class TabPanel {
   private drawAcceptSelector() {
     const acceptWrapper = document.createElement("div");
     addClass(acceptWrapper, "requestConfigWrapper", "acceptWrapper");
-    createLabel(i18next.t("settings.acceptHeaders"), acceptWrapper);
+    createLabel(i18next.t("yasgui.settings.acceptHeaders"), acceptWrapper);
     // Request type
     this.setAcceptHeader_select = createSelector(
       AcceptOptionsMap,
@@ -213,7 +213,7 @@ export default class TabPanel {
     const argumentsWrapper = document.createElement("div");
     addClass(argumentsWrapper, "requestConfigWrapper", "textSetting");
 
-    createLabel(i18next.t("settings.arguments"), argumentsWrapper);
+    createLabel(i18next.t("yasgui.settings.arguments"), argumentsWrapper);
 
     this.menuElement.appendChild(argumentsWrapper);
 
@@ -249,7 +249,7 @@ export default class TabPanel {
     const headerWrapper = document.createElement("div");
     addClass(headerWrapper, "requestConfigWrapper", "textSetting");
 
-    const URLArgLabel = createLabel(i18next.t("settings.arguments.header"));
+    const URLArgLabel = createLabel(i18next.t("yasgui.settings.arguments.header"));
     headerWrapper.appendChild(URLArgLabel);
 
     this.menuElement.appendChild(headerWrapper);
@@ -277,7 +277,7 @@ export default class TabPanel {
     const defaultGraphWrapper = document.createElement("div");
     addClass(defaultGraphWrapper, "requestConfigWrapper", "textSetting");
 
-    const defaultGraphLabel = createLabel(i18next.t("settings.graphs.default"));
+    const defaultGraphLabel = createLabel(i18next.t("yasgui.settings.graphs.default"));
     defaultGraphWrapper.appendChild(defaultGraphLabel);
 
     this.menuElement.appendChild(defaultGraphWrapper);
@@ -309,7 +309,7 @@ export default class TabPanel {
     const namedGraphWrapper = document.createElement("div");
     addClass(namedGraphWrapper, "requestConfigWrapper", "textSetting");
 
-    const namedGraphLabel = createLabel(i18next.t("settings.graphs.named"));
+    const namedGraphLabel = createLabel(i18next.t("yasgui.settings.graphs.named"));
     namedGraphWrapper.appendChild(namedGraphLabel);
     this.menuElement.appendChild(namedGraphWrapper);
 

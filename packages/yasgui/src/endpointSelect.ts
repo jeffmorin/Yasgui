@@ -93,7 +93,7 @@ export class EndpointSelect extends EventEmitter {
 
     // Init autocomplete library
     new Autocomplete<CatalogueItem>({
-      placeholder: i18next.t("endpoint.selectPlaceholder"),
+      placeholder: i18next.t("yasgui.endpoint.selectPlaceholder"),
       highlight: false,
       maxResults: 100,
       trigger: {
@@ -142,7 +142,7 @@ export class EndpointSelect extends EventEmitter {
             // Match is highlighted text
             resultsContainer.innerHTML = parse(endpoint, createHighlights(endpoint, this.inputField.value)).reduce(
               (current, object) => (object.highlight ? current + object.text.bold() : current + object.text),
-              ""
+              "",
             );
             source.append(resultsContainer);
 
@@ -155,7 +155,7 @@ export class EndpointSelect extends EventEmitter {
               this.emit(
                 "remove",
                 this.value,
-                this.history.map((value) => value.endpoint)
+                this.history.map((value) => value.endpoint),
               );
               source.remove();
               event.stopPropagation();
@@ -183,7 +183,7 @@ export class EndpointSelect extends EventEmitter {
         this.emit(
           "select",
           this.value,
-          this.history.map((value) => value.endpoint)
+          this.history.map((value) => value.endpoint),
         );
       },
       noResults: () => {
@@ -191,7 +191,7 @@ export class EndpointSelect extends EventEmitter {
         if (container) {
           const noResults = document.createElement("div");
           addClass(noResults, "noResults");
-          noResults.innerText = i18next.t("endpoint.enterToAdd");
+          noResults.innerText = i18next.t("yasgui.endpoint.enterToAdd");
           container.appendChild(noResults);
         }
       },
@@ -223,7 +223,7 @@ export class EndpointSelect extends EventEmitter {
           this.emit(
             "select",
             this.value,
-            this.history.map((h) => h.endpoint)
+            this.history.map((h) => h.endpoint),
           );
           this.inputField.blur();
           return;
@@ -233,7 +233,7 @@ export class EndpointSelect extends EventEmitter {
         this.emit(
           "select",
           this.value,
-          this.history.map((value) => value.endpoint)
+          this.history.map((value) => value.endpoint),
         );
         this.clearListSuggestionList();
         this.inputField.blur();
@@ -249,7 +249,7 @@ export class EndpointSelect extends EventEmitter {
       if (event.keyCode === 38 || event.keyCode === 40) {
         event.stopPropagation();
         const selected: HTMLLIElement | null = this.container.querySelector(
-          ".autocompleteList .autoComplete_result.autoComplete_selected"
+          ".autocompleteList .autoComplete_result.autoComplete_selected",
         );
         if (selected && !listElementIsFullyVissible(selected)) {
           selected.scrollIntoView(false);

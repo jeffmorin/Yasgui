@@ -212,8 +212,8 @@ export class Yasqe extends CodeMirror {
       var svgShare = drawSvgStringAsElement(imgs.share);
       const shareLinkWrapper = document.createElement("button");
       shareLinkWrapper.className = "yasqe_share";
-      shareLinkWrapper.title = i18next.t("share.query");
-      shareLinkWrapper.setAttribute("aria-label", i18next.t("share.query"));
+      shareLinkWrapper.title = i18next.t("yasgui.query.share");
+      shareLinkWrapper.setAttribute("aria-label", i18next.t("yasgui.query.share"));
       shareLinkWrapper.appendChild(svgShare);
       buttons.appendChild(shareLinkWrapper);
       shareLinkWrapper.addEventListener("click", (event: MouseEvent) => showSharePopup(event));
@@ -236,7 +236,7 @@ export class Yasqe extends CodeMirror {
               popup = undefined;
             }
           },
-          true
+          true,
         );
         var input = document.createElement("input");
         input.type = "text";
@@ -288,7 +288,7 @@ export class Yasqe extends CodeMirror {
                 }
                 errSpan.textContent = textContent;
                 input.replaceWith(errSpan);
-              }
+              },
             );
           };
         }
@@ -337,8 +337,8 @@ export class Yasqe extends CodeMirror {
           this.query().catch(() => {}); //catch this to avoid unhandled rejection
         }
       };
-      this.queryBtn.title = "Run query";
-      this.queryBtn.setAttribute("aria-label", "Run query");
+      this.queryBtn.title = i18next.t("yasgui.query.run");
+      this.queryBtn.setAttribute("aria-label", i18next.t("yasgui.query.run"));
 
       buttons.appendChild(this.queryBtn);
       this.updateQueryButton();
@@ -468,7 +468,7 @@ export class Yasqe extends CodeMirror {
     //on caveat: this function won't work when query is invalid (i.e. when typing)
     const token: Token = this.getTokenAt(
       { line: this.getDoc().lastLine(), ch: this.getDoc().getLine(this.getDoc().lastLine()).length },
-      true
+      true,
     );
     const vars: string[] = [];
     for (var v in token.state.variables) {
@@ -571,7 +571,7 @@ export class Yasqe extends CodeMirror {
           {
             line: i,
             ch: 1,
-          }
+          },
         );
       } else {
         // Not all lines are commented, so add comments
@@ -656,7 +656,7 @@ export class Yasqe extends CodeMirror {
           //start injecting
           newQuery += "\n" + injectString;
         }
-      }
+      },
     );
     return newQuery;
   }
@@ -695,7 +695,7 @@ export class Yasqe extends CodeMirror {
           line: l,
           ch: this.getDoc().getLine(l).length,
         },
-        precise
+        precise,
       );
       var state = token.state;
       this.setOption("queryType", state.queryType);
@@ -718,7 +718,7 @@ export class Yasqe extends CodeMirror {
           state.possibleCurrent.forEach(function (expected) {
             expectedEncoded.push("<strong style='text-decoration:underline'>" + escape(expected) + "</strong>");
           });
-          tooltip(this, warningEl, "This line is invalid. Expected: " + expectedEncoded.join(", "));
+          tooltip(this, warningEl, i18next.t("yasqe.error.syntax", { expected: expectedEncoded.join(", ") }));
         }
         // warningEl.style.marginTop = "2px";
         // warningEl.style.marginLeft = "2px";
@@ -921,7 +921,7 @@ export class Yasqe extends CodeMirror {
   static forkAutocompleter(
     fromCompleter: string,
     newCompleter: { name: string } & Partial<Autocompleter.CompleterConfig>,
-    enable = true
+    enable = true,
   ) {
     if (!Yasqe.Autocompleters[fromCompleter]) throw new Error("Autocompleter " + fromCompleter + " does not exist");
     if (!newCompleter?.name) {
@@ -985,7 +985,7 @@ export interface HintConfig {
         moveFocus: (movement: number) => void;
         pick: () => void;
         setFocus: (index: number) => void;
-      }
+      },
     ) => void;
   };
 }

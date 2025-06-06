@@ -16,6 +16,7 @@ import { DeepReadonly } from "ts-essentials";
 import { cloneDeep } from "lodash-es";
 import sanitize from "../../helpers/sanitize";
 import type { Api, ConfigColumns, CellMetaSettings, Config } from "datatables.net";
+import i18next from "i18next";
 
 const ColumnResizer = require("column-resizer");
 const DEFAULT_PAGE_SIZE = 50;
@@ -69,36 +70,45 @@ export default class Table implements Plugin<PluginConfig> {
   constructor(yasr: Yasr) {
     this.yasr = yasr;
     //TODO read options from constructor
-    this.config = Table.defaults;
+    this.config = Table.defaults();
   }
-  public static defaults: PluginConfig = {
-    openIriInNewWindow: true,
-    tableConfig: {
-      layout: {
-        // @ts-ignore
-        top: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
-        // @ts-ignore
-        topStart: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
-        // @ts-ignore
-        topEnd: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
-      },
-      pageLength: DEFAULT_PAGE_SIZE, //default page length
-      lengthChange: true, //allow changing page length
-      data: [],
-      columns: [],
-      order: [],
-      deferRender: true,
-      orderClasses: false,
-      language: {
-        paginate: {
-          first: "&lt;&lt;", // Have to specify these two due to TS defs, <<
-          last: "&gt;&gt;", // Have to specify these two due to TS defs, >>
-          next: "&gt;", // >
-          previous: "&lt;", // <
+  public static defaults(): PluginConfig {
+    return {
+      openIriInNewWindow: true,
+      tableConfig: {
+        layout: {
+          // @ts-ignore
+          top: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
+          // @ts-ignore
+          topStart: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
+          // @ts-ignore
+          topEnd: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
+        },
+        pageLength: DEFAULT_PAGE_SIZE, //default page length
+        lengthChange: true, //allow changing page length
+        data: [],
+        columns: [],
+        order: [],
+        deferRender: true,
+        orderClasses: false,
+        language: {
+          paginate: {
+            first: "\u25c0\u25c0", // Have to specify these two due to TS defs, <<
+            last: "\u25b6\u25b6", // Have to specify these two due to TS defs, >>
+            next: "\u25b6", // >
+            previous: "\u25c0", // <
+          },
+          info: i18next.t("yasr.plugin.datatables.info"),
+          infoEmpty: i18next.t("yasr.plugin.datatables.infoEmpty"),
+          entries: {
+            _: i18next.t("yasr.plugin.datatables.entries_n"),
+            0: i18next.t("yasr.plugin.datatables.entries_0"),
+            1: i18next.t("yasr.plugin.datatables.entries_1"),
+          },
         },
       },
-    },
-  };
+    };
+  }
   private getRows(): DataRow[] {
     if (!this.yasr.results) return [];
     const bindings = this.yasr.results.getBindings();
@@ -127,7 +137,7 @@ export default class Table implements Plugin<PluginConfig> {
     const uri = `${hideBrackets ? "" : "&lt;"}<a class='iri' target='${
       this.config.openIriInNewWindow ? "_blank" : "_self"
     }'${this.config.openIriInNewWindow ? " ref='noopener noreferrer'" : ""} href='${href}'>${sanitize(
-      visibleString
+      visibleString,
     )}</a>${hideBrackets ? "" : "&gt;"}`;
     return sanitize(uri);
   }
@@ -327,7 +337,7 @@ export default class Table implements Plugin<PluginConfig> {
     const toggleWrapper = document.createElement("div");
     const switchComponent = document.createElement("label");
     const textComponent = document.createElement("span");
-    textComponent.innerText = "Simple view";
+    textComponent.innerText = i18next.t("yasr.plugin.table.view.simple");
     addClass(textComponent, "label");
     switchComponent.appendChild(textComponent);
     addClass(switchComponent, "switch");
@@ -343,7 +353,7 @@ export default class Table implements Plugin<PluginConfig> {
     const ellipseToggleWrapper = document.createElement("div");
     const ellipseSwitchComponent = document.createElement("label");
     const ellipseTextComponent = document.createElement("span");
-    ellipseTextComponent.innerText = "Ellipse";
+    ellipseTextComponent.innerText = i18next.t("yasr.plugin.table.ellipsis");
     addClass(ellipseTextComponent, "label");
     ellipseSwitchComponent.appendChild(ellipseTextComponent);
     addClass(ellipseSwitchComponent, "switch");
@@ -358,8 +368,8 @@ export default class Table implements Plugin<PluginConfig> {
     // Create table filter
     this.tableFilterField = document.createElement("input");
     this.tableFilterField.className = "tableFilter";
-    this.tableFilterField.placeholder = "Filter query results";
-    this.tableFilterField.setAttribute("aria-label", "Filter query results");
+    this.tableFilterField.placeholder = i18next.t("yasr.plugin.table.filter");
+    this.tableFilterField.setAttribute("aria-label", i18next.t("yasr.plugin.table.filter"));
     this.tableControls.appendChild(this.tableFilterField);
     this.tableFilterField.addEventListener("keyup", this.handleTableSearch);
 
@@ -369,7 +379,7 @@ export default class Table implements Plugin<PluginConfig> {
 
     // Create label for page size element
     const pageSizerLabel = document.createElement("span");
-    pageSizerLabel.textContent = "Page size: ";
+    pageSizerLabel.textContent = i18next.t("yasr.plugin.table.pageSize");
     pageSizerLabel.className = "pageSizerLabel";
     pageSizerWrapper.appendChild(pageSizerLabel);
 
@@ -383,7 +393,7 @@ export default class Table implements Plugin<PluginConfig> {
       const element = document.createElement("option");
       element.value = option + "";
       // -1 selects everything so we should call it All
-      element.innerText = option > 0 ? option + "" : "All";
+      element.innerText = option > 0 ? option + "" : i18next.t("yasr.plugin.table.pageSize.all");
       // Set initial one as selected
       if (this.dataTable?.page.len() === option) element.selected = true;
       this.tableSizeField.appendChild(element);
@@ -397,7 +407,7 @@ export default class Table implements Plugin<PluginConfig> {
     return {
       getData: () => this.yasr.results?.asCsv() || "",
       contentType: "text/csv",
-      title: "Download result",
+      title: i18next.t("yasr.plugin.table.download"),
       filename: `${filename || "queryResults"}.csv`,
     } as DownloadInfo;
   }

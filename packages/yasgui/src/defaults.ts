@@ -32,7 +32,7 @@ export default function initialize(): Config<CatalogueItem> {
       }
       return "yagui_" + id;
     },
-    tabName: i18next.t("query"),
+    tabName: i18next.t("yasgui.query"),
     corsProxy: undefined,
     persistencyExpire: 60 * 60 * 24 * 30,
     persistenceLabelResponse: "response",
@@ -60,7 +60,7 @@ export default function initialize(): Config<CatalogueItem> {
         endpointSpan.innerHTML =
           data.matches.endpoint?.reduce(
             (current, object) => (object.highlight ? current + object.text.bold() : current + object.text),
-            ""
+            "",
           ) || "";
         contentDiv.appendChild(endpointSpan);
         source.appendChild(contentDiv);

@@ -113,7 +113,7 @@ export class TabListEl {
     //tab close btn
     const closeBtn = document.createElement("div");
     closeBtn.innerHTML = "&#x2716;";
-    closeBtn.title = i18next.t("tab.close.tooltip");
+    closeBtn.title = i18next.t("yasgui.tab.close.tooltip");
     closeBtn.setAttribute("tabindex", "-1");
     closeBtn.setAttribute("aria-hidden", "true");
     addClass(closeBtn, "closeTab");
@@ -256,8 +256,8 @@ export class TabList {
     const addTabLink = document.createElement("button");
     addTabLink.className = "addTab";
     addTabLink.textContent = "+";
-    addTabLink.title = i18next.t("tab.add.tooltip");
-    addTabLink.setAttribute("aria-label", i18next.t("tab.add"));
+    addTabLink.title = i18next.t("yasgui.tab.add.tooltip");
+    addTabLink.setAttribute("aria-label", i18next.t("yasgui.tab.add"));
     addTabLink.addEventListener("click", this.handleAddNewTab);
     addTabLink.addEventListener("focus", () => {
       // sets aria tabEntryIndex to active tab

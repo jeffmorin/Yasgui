@@ -395,14 +395,13 @@ export class Yasr extends EventEmitter {
       removeClass(this.dataElement, "empty");
       const bindings = this.results.getBindings();
       if (bindings) {
-        //innerText += `${bindings.length} result${bindings.length === 1 ? "" : "s"}`; // Set amount of results
-        innerText += i18next.t("yasr.results.count", { count: bindings.length }); // Set amount of results
+        // Set amount of results
+        innerText += i18next.t("yasr.results.count", { count: bindings.length });
       }
       const responseTime = this.results.getResponseTime();
       if (responseTime) {
         if (!innerText) innerText = i18next.t("yasr.response");
         const time = responseTime / 1000;
-        //innerText += ` in ${time} second${time === 1 ? "" : "s"}`;
         innerText += " " + i18next.t("yasr.results.seconds", { count: time });
       }
     } else {
@@ -413,15 +412,16 @@ export class Yasr extends EventEmitter {
   private updateHelpButton() {
     const selectedPlugin = this.getSelectedPlugin();
     if (selectedPlugin?.helpReference) {
-      const titleLabel = `View documentation of ${selectedPlugin.label || this.getSelectedPluginName()}`;
+      const titleLabel = i18next.t("yasr.plugin.viewDoc", {
+        plugin: selectedPlugin.label || this.getSelectedPluginName(),
+      });
       this.documentationLink.href = selectedPlugin.helpReference;
       this.documentationLink.title = titleLabel;
       this.documentationLink.setAttribute("aria-label", titleLabel);
       removeClass(this.documentationLink, "disabled");
     } else {
       addClass(this.documentationLink, "disabled");
-      this.documentationLink.title =
-        "This plugin doesn't have a help reference yet. Please contact the maintainer to fix this";
+      this.documentationLink.title = i18next.t("yasr.plugin.noDoc");
     }
   }
   updateExportHeaders() {
@@ -436,7 +436,7 @@ export class Yasr extends EventEmitter {
           return;
         }
       }
-      this.downloadBtn.title = "Download not supported";
+      this.downloadBtn.title = i18next.t("yasr.download.notSupported");
       addClass(this.downloadBtn, "disabled");
     }
   }
@@ -533,7 +533,7 @@ export class Yasr extends EventEmitter {
       if (Yasr.plugins[plugin]) {
         this.plugins[plugin] = new (<any>Yasr.plugins[plugin])(this);
       } else {
-        console.warn("Wanted to initialize plugin " + plugin + " but could not find a matching registered plugin");
+        console.warn(`Wanted to initialize plugin ${plugin} but could not find a matching registered plugin`);
       }
     }
   }
