@@ -17,6 +17,7 @@ import getDefaults from "./defaults";
 import CodeMirror from "./CodeMirror";
 import { YasqeAjaxConfig } from "./sparql";
 import i18next from "i18next";
+import { RequeteEnregistree } from "./rvmTypes";
 
 export interface Yasqe {
   on(eventName: "query", handler: (instance: Yasqe, req: Request, abortController?: AbortController) => void): void;
@@ -179,6 +180,7 @@ export class Yasqe extends CodeMirror {
     if (typeof persistenceId === "string") return persistenceId;
     return persistenceId(this);
   }
+
   private drawButtons() {
     const buttons = document.createElement("div");
     buttons.className = "yasqe_buttons";
@@ -196,19 +198,20 @@ export class Yasqe extends CodeMirror {
       }
     }
 
+    const requetesEnregistreesBtn = document.createElement("button");
+    requetesEnregistreesBtn.className = "yasqe_custom";
+    requetesEnregistreesBtn.title = "Custom Action";
+    requetesEnregistreesBtn.innerHTML = `<span>&#x1F4C1;</span>`;
+    requetesEnregistreesBtn.addEventListener("click", (event: MouseEvent) => {
+      event.stopPropagation();
+      this.showSavedQueriesPopup(requetesEnregistreesBtn);
+    });
+    buttons.appendChild(requetesEnregistreesBtn);
+
     /**
      * draw share link button
      */
     if (this.config.createShareableLink) {
-      const requetesEnregistreesBtn = document.createElement("button");
-      requetesEnregistreesBtn.className = "yasqe_custom";
-      requetesEnregistreesBtn.title = "Custom Action";
-      requetesEnregistreesBtn.innerHTML = `<span>&#x1F4C1;</span>`;
-      requetesEnregistreesBtn.onclick = () => {
-        //this.handleCustomAction();
-      };
-      buttons.appendChild(requetesEnregistreesBtn);
-
       var svgShare = drawSvgStringAsElement(imgs.share);
       const shareLinkWrapper = document.createElement("button");
       shareLinkWrapper.className = "yasqe_share";
@@ -344,6 +347,99 @@ export class Yasqe extends CodeMirror {
       this.updateQueryButton();
     }
   }
+
+  private async showSavedQueriesPopup(anchorBtn: HTMLElement) {
+    const baseUrl = this.config.backendBaseUrl;
+
+    // Remove any existing popup
+    document.querySelectorAll(".yasqe_savedQueriesPopup").forEach((el) => el.remove());
+
+    // Example: Replace with your own logic to fetch saved queries
+    // const savedQueries = [
+    //   { name: "Example Query 1", query: "SELECT * WHERE {?s ?p ?o}" },
+    //   { name: "Example Query 2", query: "ASK {?s ?p ?o}" }
+    // ];
+
+    const popup = document.createElement("div");
+    popup.className = "yasqe_savedQueriesPopup";
+    popup.style.position = "absolute";
+    // Position below the button
+    const rect = anchorBtn.getBoundingClientRect();
+    popup.style.top = rect.bottom + window.scrollY + "px";
+    popup.style.left = rect.left + window.scrollX + "px";
+    popup.style.zIndex = "9999";
+    popup.style.background = "#fff";
+    popup.style.border = "1px solid #ccc";
+    popup.style.padding = "8px";
+    popup.style.minWidth = "200px";
+    popup.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+
+    let savedQueries: RequeteEnregistree[] = [];
+    try {
+      const response = await fetch(`${baseUrl}/listeRequetes.do`);
+      if (response.ok) {
+        savedQueries = await response.json();
+      } else {
+        popup.innerText = "Failed to load saved queries.";
+      }
+    } catch (e) {
+      popup.innerText = "Error loading saved queries.";
+    }
+
+    if (savedQueries.length === 0 && !popup.innerText) {
+      popup.innerText = "No saved queries.";
+    } else {
+      // Make sure yasgui is available in the current scope
+      // You may need to pass yasgui as a parameter to this function or access it globally
+      const yasgui = (window as any).yasgui;
+      savedQueries.forEach((q) => {
+        const item = document.createElement("div");
+        item.style.cursor = "pointer";
+        item.style.padding = "8px 0";
+        item.innerHTML = `<strong>${q.nom}</strong>`;
+        item.onclick = () => {
+          const event = new CustomEvent("yasqe:newTabWithQuery", {
+            detail: {
+              query: q.requete,
+              name: q.nom,
+              id: q.id,
+              langue: q.langue,
+              horodateCreation: q.horodateCreation,
+              horodateModification: q.horodateModification,
+            },
+          });
+          if (yasgui && typeof yasgui.addTab === "function") {
+            const newTab = yasgui.addTab({
+              yasqe: {
+                value: event.detail.query, // or detail.requete
+              },
+              name: event.detail.name || q.nom, // use the property you send from Yasqe
+            });
+          } else {
+            console.warn("yasgui is not defined or does not support addTab/selectTab");
+          }
+
+          window.dispatchEvent(event);
+          popup.remove();
+        };
+        popup.appendChild(item);
+      });
+    }
+
+    // Remove popup when clicking outside
+    setTimeout(() => {
+      const removePopup = (e: MouseEvent) => {
+        if (!popup.contains(e.target as Node)) {
+          popup.remove();
+          document.removeEventListener("mousedown", removePopup, true);
+        }
+      };
+      document.addEventListener("mousedown", removePopup, true);
+    }, 0);
+
+    document.body.appendChild(popup);
+  }
+
   private drawResizer() {
     if (this.resizeWrapper) return;
     this.resizeWrapper = document.createElement("div");
@@ -1046,6 +1142,8 @@ export interface Config extends Partial<CodeMirror.EditorConfiguration> {
   editorHeight: string;
   queryingDisabled: string | undefined; // The string will be the message displayed when hovered
   prefixCcApi: string; // the suggested default prefixes URL API getter
+  backendBaseUrl: string; // The base URL for the backend, used for saved queries and other backend interactions
+  interfaceLanguage: string; // The language of the interface, e.g. 'en' for English
 }
 export interface PersistentConfig {
   query: string;

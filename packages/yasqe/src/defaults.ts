@@ -52,7 +52,7 @@ SELECT * WHERE {
             .replaceRange(
               "",
               { ch: yasqe.getDoc().getLine(lineNumber - 1).length, line: lineNumber - 1 },
-              { ch: yasqe.getDoc().getLine(lineNumber).length, line: lineNumber }
+              { ch: yasqe.getDoc().getLine(lineNumber).length, line: lineNumber },
             );
         } else {
           //delete current line including the linebreak after
@@ -131,6 +131,8 @@ SELECT * WHERE {
     editorHeight: "300px",
     queryingDisabled: undefined,
     prefixCcApi: prefixCcApi,
+    backendBaseUrl: "http://www.test.rvm.ca:8080/rvmweb/sparql",
+    interfaceLanguage: "fr",
   };
   const requestConfig: PlainRequestConfig = {
     queryArgument: undefined, //undefined means: get query argument based on query mode

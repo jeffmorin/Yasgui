@@ -5,16 +5,27 @@ import { CatalogueItem } from "./endpointSelect";
 import i18next from "i18next";
 import i18n from "./i18n.json";
 
-i18next.init({
-  resources: i18n,
-  lng: "en", // Default language
-  fallbackLng: "en",
-  interpolation: { escapeValue: false },
-});
+// i18next.init({
+//   resources: i18n,
+//   lng: "en", // Default language
+//   fallbackLng: "en",
+//   interpolation: { escapeValue: false },
+// });
 
-i18next.changeLanguage("fr");
+// i18next.changeLanguage(Yasqe.defaults.interfaceLanguage);
 
-export default function initialize(): Config<CatalogueItem> {
+//export default function initialize(): Config<CatalogueItem> {
+export default function initialize(config?: Partial<Config<CatalogueItem>>): Config<CatalogueItem> {
+  // Use frontend config if provided, otherwise fallback to Yasqe.defaults or "en"
+  const language = (config as any)?.interfaceLanguage || Yasqe.defaults.interfaceLanguage || "en";
+
+  i18next.init({
+    resources: i18n,
+    lng: language,
+    fallbackLng: "en",
+    interpolation: { escapeValue: false },
+  });
+
   return {
     autofocus: true,
     endpointInfo: undefined,
