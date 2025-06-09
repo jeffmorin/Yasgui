@@ -200,7 +200,7 @@ export class Yasqe extends CodeMirror {
 
     const requetesEnregistreesBtn = document.createElement("button");
     requetesEnregistreesBtn.className = "yasqe_custom";
-    requetesEnregistreesBtn.title = "Custom Action";
+    requetesEnregistreesBtn.title = i18next.t("yasqe.custom.savedQueries");
     requetesEnregistreesBtn.innerHTML = `<span>&#x1F4C1;</span>`;
     requetesEnregistreesBtn.addEventListener("click", (event: MouseEvent) => {
       event.stopPropagation();
@@ -213,10 +213,11 @@ export class Yasqe extends CodeMirror {
      */
     if (this.config.createShareableLink) {
       var svgShare = drawSvgStringAsElement(imgs.share);
+      const shareQuery = i18next.t("yasqe.query.share");
       const shareLinkWrapper = document.createElement("button");
       shareLinkWrapper.className = "yasqe_share";
-      shareLinkWrapper.title = i18next.t("yasgui.query.share");
-      shareLinkWrapper.setAttribute("aria-label", i18next.t("yasgui.query.share"));
+      shareLinkWrapper.title = shareQuery;
+      shareLinkWrapper.setAttribute("aria-label", shareQuery);
       shareLinkWrapper.appendChild(svgShare);
       buttons.appendChild(shareLinkWrapper);
       shareLinkWrapper.addEventListener("click", (event: MouseEvent) => showSharePopup(event));
@@ -340,8 +341,9 @@ export class Yasqe extends CodeMirror {
           this.query().catch(() => {}); //catch this to avoid unhandled rejection
         }
       };
-      this.queryBtn.title = i18next.t("yasgui.query.run");
-      this.queryBtn.setAttribute("aria-label", i18next.t("yasgui.query.run"));
+      const runQuery = i18next.t("yasqe.query.run");
+      this.queryBtn.title = runQuery;
+      this.queryBtn.setAttribute("aria-label", runQuery);
 
       buttons.appendChild(this.queryBtn);
       this.updateQueryButton();
@@ -503,8 +505,9 @@ export class Yasqe extends CodeMirror {
       this.queryBtn.title = this.config.queryingDisabled;
     } else {
       removeClass(this.queryBtn, "query_disabled");
-      this.queryBtn.title = "Run query";
-      this.queryBtn.setAttribute("aria-label", "Run query");
+      const runQuery = i18next.t("yasqe.query.run");
+      this.queryBtn.title = runQuery;
+      this.queryBtn.setAttribute("aria-label", runQuery);
     }
     if (!status) {
       status = this.queryValid ? "valid" : "error";

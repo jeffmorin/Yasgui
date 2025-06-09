@@ -62,7 +62,7 @@ export default class Table implements Plugin<PluginConfig> {
       }
     | undefined;
   public helpReference = "https://docs.triply.cc/yasgui#table";
-  public label = "Table";
+  public label = i18next.t("yasr.table");
   public priority = 10;
   public getIcon() {
     return drawSvgStringAsElement(drawFontAwesomeIconAsSvg(faTableIcon));
@@ -77,12 +77,9 @@ export default class Table implements Plugin<PluginConfig> {
       openIriInNewWindow: true,
       tableConfig: {
         layout: {
-          // @ts-ignore
-          top: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
-          // @ts-ignore
-          topStart: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
-          // @ts-ignore
-          topEnd: null, // @TODO: remove ignore once https://github.com/DataTables/DataTablesSrc/issues/271 is released
+          top: {},
+          topStart: {},
+          topEnd: {},
         },
         pageLength: DEFAULT_PAGE_SIZE, //default page length
         lengthChange: true, //allow changing page length
