@@ -19,13 +19,14 @@ import { drawSvgStringAsElement, addClass, removeClass, drawFontAwesomeIconAsSvg
 import * as faAlignIcon from "@fortawesome/free-solid-svg-icons/faAlignLeft";
 import { DeepReadonly } from "ts-essentials";
 import * as imgs from "../../imgs";
+import i18next from "i18next";
 
 export interface PluginConfig {
   maxLines: number;
 }
 export default class Response implements Plugin<PluginConfig> {
   private yasr: Yasr;
-  label = "Response";
+  label = i18next.t("yasr.response");
   priority = 2;
   helpReference = "https://docs.triply.cc/yasgui#response";
   private config: DeepReadonly<PluginConfig>;
@@ -63,7 +64,7 @@ export default class Response implements Plugin<PluginConfig> {
       },
       filename: `${filename || "queryResults"}${extension ? "." + extension : ""}`,
       contentType: contentType ? contentType : "text/plain",
-      title: "Download result",
+      title: i18next.t("yasr.response.download"),
     };
   }
   draw(persistentConfig: PluginConfig) {
@@ -126,19 +127,21 @@ export default class Response implements Plugin<PluginConfig> {
     const overlayContent = document.createElement("div");
     addClass(overlayContent, "overlay_content");
 
+    const showAll = i18next.t("yasr.response.showAll");
     const showMoreButton = document.createElement("button");
-    showMoreButton.title = "Show all";
+    showMoreButton.title = showAll;
     addClass(showMoreButton, "yasr_btn", "overlay_btn");
-    showMoreButton.textContent = "Show all";
+    showMoreButton.textContent = showAll;
     showMoreButton.addEventListener("click", () => this.showMore());
     overlayContent.append(showMoreButton);
 
+    const download = i18next.t("yasr.response.download");
     const downloadButton = document.createElement("button");
-    downloadButton.title = "Download result";
+    downloadButton.title = download;
     addClass(downloadButton, "yasr_btn", "overlay_btn");
 
     const text = document.createElement("span");
-    text.innerText = "Download result";
+    text.innerText = download;
     downloadButton.appendChild(text);
     downloadButton.appendChild(drawSvgStringAsElement(imgs.download));
     downloadButton.addEventListener("click", () => this.yasr.download());
