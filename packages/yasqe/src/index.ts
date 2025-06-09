@@ -382,14 +382,14 @@ export class Yasqe extends CodeMirror {
       if (response.ok) {
         savedQueries = await response.json();
       } else {
-        popup.innerText = "Failed to load saved queries.";
+        popup.innerText = i18next.t("yasqe.custom.savedQueries.fail");
       }
     } catch (e) {
-      popup.innerText = "Error loading saved queries.";
+      popup.innerText = i18next.t("yasqe.custom.savedQueries.fail");
     }
 
     if (savedQueries.length === 0 && !popup.innerText) {
-      popup.innerText = "No saved queries.";
+      popup.innerText = i18next.t("yasqe.custom.savedQueries.empty");
     } else {
       // Make sure yasgui is available in the current scope
       // You may need to pass yasgui as a parameter to this function or access it globally

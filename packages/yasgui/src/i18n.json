@@ -31,6 +31,9 @@
         "yasqe.error.fetchNotifications": "Failed fetching suggestions",
         "yasqe.error.syntax": "This line is invalid. Expected: {{ expected }}",
         "yasqe.custom.savedQueries": "Saved queries",
+        "yasqe.custom.savedQueries.fail": "Failed to load saved queries.",
+        "yasqe.custom.savedQueries.error": "Error loading saved queries.",
+        "yasqe.custom.savedQueries.empty": "No saved queries.",
 
         "yasr.table": "Table",
         "yasr.response": "Response",
@@ -88,6 +91,9 @@
         "yasqe.error.fetchNotifications": "Erreur de récupération des suggestions",
         "yasqe.error.syntax": "Cette ligne est invalide. Élément attendu: {{ expected }}",
         "yasqe.custom.savedQueries": "Requêtes sauvegardées",
+        "yasqe.custom.savedQueries.fail": "Les requêtes sauvegardées n'ont pas pu être chargées.",
+        "yasqe.custom.savedQueries.error": "Erreur de chargement des requêtes sauvegardées.",
+        "yasqe.custom.savedQueries.empty": "Aucune requête sauvegardée.",
 
         "yasr.table": "Tableau",
         "yasr.response": "Réponse",
