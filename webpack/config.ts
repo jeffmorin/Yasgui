@@ -101,7 +101,7 @@ if (isDev) {
         const name = `${pathData.chunk?.name}`.toLocaleLowerCase();
         return `${name}.min.css`;
       },
-    })
+    }),
   );
 }
 if (analyzeBundle) plugins.push(new BundleAnalyzerPlugin());
@@ -114,7 +114,7 @@ plugins.push(
     options: {
       concurrency: 100,
     },
-  })
+  }),
 );
 
 export const genericConfig: webpack.Configuration = {
@@ -129,7 +129,7 @@ export const genericConfig: webpack.Configuration = {
       ? []
       : [
           new TerserPlugin({
-            sourceMap: true,
+            // sourceMap: true,
           }),
           new CssMinimizerPlugin({}),
         ],

@@ -31,7 +31,7 @@
       }
     },
     "build": {
-      "command": "npm run util:buildWebpackConfig && webpack --config ./webpack/config.js && ./webpack/distributeBuildFiles.sh",
+      "command": "npm run util:buildWebpackConfig && webpack --config ./webpack/config.js && bash ./webpack/distributeBuildFiles.sh",
       "env": {
         "NODE_ENV": "production"
       }
