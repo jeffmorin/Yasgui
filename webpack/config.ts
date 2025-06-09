@@ -129,6 +129,7 @@ export const genericConfig: webpack.Configuration = {
       ? []
       : [
           new TerserPlugin({
+            // Documentation: https://github.com/webpack-contrib/terser-webpack-plugin
             // sourceMap: true,
           }),
           new CssMinimizerPlugin({}),
