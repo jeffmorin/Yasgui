@@ -366,12 +366,12 @@ export class Yasqe extends CodeMirror {
     // Position below the button
     const rect = anchorBtn.getBoundingClientRect();
     popup.style.top = rect.bottom + window.scrollY + "px";
-    popup.style.left = rect.left + window.scrollX + "px";
+    popup.style.left = rect.left + window.scrollX - 400 + "px";
     popup.style.zIndex = "9999";
     popup.style.background = "#fff";
     popup.style.border = "1px solid #ccc";
     popup.style.padding = "8px";
-    popup.style.minWidth = "200px";
+    popup.style.width = "420px";
     popup.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
 
     let savedQueries: RequeteEnregistree[] = [];
@@ -403,18 +403,21 @@ export class Yasqe extends CodeMirror {
               query: q.requete,
               name: q.nom,
               id: q.id,
-              langue: q.langue,
-              horodateCreation: q.horodateCreation,
-              horodateModification: q.horodateModification,
             },
           });
           if (yasgui && typeof yasgui.addTab === "function") {
+            console.log("Adding new tab with query:", q.nom);
             const newTab = yasgui.addTab({
               yasqe: {
-                value: event.detail.query, // or detail.requete
+                value: event.detail.query,
               },
-              name: event.detail.name || q.nom, // use the property you send from Yasqe
+              name: event.detail.name,
             });
+            if (newTab.yasqe) {
+              newTab.yasqe.setValue(event.detail.query);
+              newTab.setName(event.detail.name);
+            }
+            yasgui.selectTab(newTab.getId());
           } else {
             console.warn("yasgui is not defined or does not support addTab/selectTab");
           }
