@@ -131,8 +131,8 @@ SELECT * WHERE {
     editorHeight: "300px",
     queryingDisabled: undefined,
     prefixCcApi: prefixCcApi,
-    backendBaseUrl: "http://www.test.rvm.ca:8080/rvmweb/sparql",
-    interfaceLanguage: "fr",
+    backendBaseUrl: undefined as unknown as string,
+    interfaceLanguage: undefined as unknown as string,
   };
   const requestConfig: PlainRequestConfig = {
     queryArgument: undefined, //undefined means: get query argument based on query mode

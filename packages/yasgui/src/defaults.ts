@@ -48,8 +48,14 @@ export default function initialize(config?: Partial<Config<CatalogueItem>>): Con
     persistencyExpire: 60 * 60 * 24 * 30,
     persistenceLabelResponse: "response",
     persistenceLabelConfig: "config",
-    yasqe: Yasqe.defaults,
-    yasr: Yasr.defaults,
+    yasqe: {
+      ...Yasqe.defaults,
+      ...(config?.yasqe || {}),
+    },
+    yasr: {
+      ...Yasr.defaults,
+      ...(config?.yasr || {}),
+    },
     endpointCatalogueOptions: {
       getData: () => {
         return [
