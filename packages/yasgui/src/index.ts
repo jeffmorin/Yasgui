@@ -97,6 +97,7 @@ export class Yasgui extends EventEmitter {
     addClass(this.rootEl, "yasgui");
     parent.appendChild(this.rootEl);
 
+    Yasgui.defaults = initializeDefaults(config as Partial<Config<CatalogueItem>>);
     this.config = merge({}, Yasgui.defaults, config);
     this.persistentConfig = new PersistentConfig(this);
 
@@ -132,7 +133,7 @@ export class Yasgui extends EventEmitter {
             optionsFromUrl.id,
             typeof this.config.populateFromUrl === "function"
               ? this.config.populateFromUrl(optionsFromUrl)
-              : optionsFromUrl
+              : optionsFromUrl,
           );
           executeIdAfterInit = optionsFromUrl.id;
         }
@@ -248,7 +249,7 @@ export class Yasgui extends EventEmitter {
      */
     if (sameRequest) {
       sameRequest = (<Array<keyof PersistedTabJson["yasqe"]>>["endpoint", "value"]).every(
-        (key) => tab1.yasqe[key] === tab2.yasqe[key]
+        (key) => tab1.yasqe[key] === tab2.yasqe[key],
       );
     }
 
@@ -260,7 +261,7 @@ export class Yasgui extends EventEmitter {
         tab1.yasr.settings.selectedPlugin === tab2.yasr.settings.selectedPlugin &&
         isEqual(
           tab1.yasr.settings.pluginsConfig?.[tab1.yasr.settings?.selectedPlugin || ""],
-          tab2.yasr.settings.pluginsConfig?.[tab2.yasr.settings?.selectedPlugin || ""]
+          tab2.yasr.settings.pluginsConfig?.[tab2.yasr.settings?.selectedPlugin || ""],
         );
     }
 
@@ -302,7 +303,7 @@ export class Yasgui extends EventEmitter {
   public addTab(
     setActive: boolean,
     partialTabConfig?: Partial<PersistedTabJson>,
-    opts: { atIndex?: number; avoidDuplicateTabs?: boolean } = {}
+    opts: { atIndex?: number; avoidDuplicateTabs?: boolean } = {},
   ): Tab {
     const tabConfig = merge({}, Tab.getDefaults(this), partialTabConfig);
     if (tabConfig.id && this.getTab(tabConfig.id)) {
@@ -356,7 +357,7 @@ export class Yasgui extends EventEmitter {
   public static linkUtils = shareLink;
   public static Yasr = Yasr;
   public static Yasqe = Yasqe;
-  public static defaults = initializeDefaults();
+  public static defaults = undefined as any as Config<CatalogueItem>;
   public static corsEnabled: { [endpoint: string]: boolean } = {};
 }
 
