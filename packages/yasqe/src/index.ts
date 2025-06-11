@@ -199,10 +199,19 @@ export class Yasqe extends CodeMirror {
     }
 
     if (this.config.backendBaseUrl) {
+      // --- Save Query Button ---
+      const saveQueryBtn = document.createElement("button");
+      saveQueryBtn.className = "yasqe_custom";
+      saveQueryBtn.title = i18next.t("yasqe.custom.saveQuery");
+      saveQueryBtn.innerHTML = `<span class="glyphicon glyphicon-floppy-disk"></span>`;
+      saveQueryBtn.onclick = () => this.showSaveQueryModal();
+      buttons.appendChild(saveQueryBtn);
+
+      // --- List Queries Button ---
       const requetesEnregistreesBtn = document.createElement("button");
       requetesEnregistreesBtn.className = "yasqe_custom";
       requetesEnregistreesBtn.title = i18next.t("yasqe.custom.savedQueries");
-      requetesEnregistreesBtn.innerHTML = `<span>&#x1F4C1;</span>`;
+      requetesEnregistreesBtn.innerHTML = `<span class="glyphicon glyphicon-folder-open"></span>`;
       requetesEnregistreesBtn.addEventListener("click", (event: MouseEvent) => {
         event.stopPropagation();
         this.showSavedQueriesPopup(requetesEnregistreesBtn);
@@ -350,6 +359,83 @@ export class Yasqe extends CodeMirror {
       buttons.appendChild(this.queryBtn);
       this.updateQueryButton();
     }
+  }
+
+  private showSaveQueryModal() {
+    // Remove any existing modal
+    document.querySelectorAll(".yasqe_saveQueryModal").forEach((el) => el.remove());
+
+    // Modal HTML (Bootstrap 4/5 compatible)
+    const modal = document.createElement("div");
+    modal.className = "modal yasqe_saveQueryModal";
+
+    modal.innerHTML = `
+      <div class="modal-dialog" style="margin-top:10vh;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">${i18next.t("yasqe.custom.saveQueryTitle") || "Save Query"}</h5>
+            <button type="button" class="close" aria-label="Close">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>${i18next.t("yasqe.custom.queryName") || "Query Name"}</label>
+              <input type="text" class="form-control" id="yasqe-save-query-name" placeholder="${i18next.t("yasqe.custom.queryNamePlaceholder") || "Enter query name"}">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-cancel">${i18next.t("yasqe.custom.cancel") || "Cancel"}</button>
+            <button type="button" class="btn btn-primary btn-save">${i18next.t("yasqe.custom.save") || "Save"}</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Close modal handlers
+    modal.querySelector(".close")?.addEventListener("click", () => modal.remove());
+    modal.querySelector(".btn-cancel")?.addEventListener("click", () => modal.remove());
+
+    // Save handler
+    modal.querySelector(".btn-save")?.addEventListener("click", async () => {
+      const nameInput = modal.querySelector("#yasqe-save-query-name") as HTMLInputElement;
+      const queryName = nameInput.value.trim();
+      if (!queryName) {
+        nameInput.classList.add("is-invalid");
+        return;
+      }
+      nameInput.classList.remove("is-invalid");
+
+      // Prepare data
+      const data = {
+        nom: queryName,
+        requete: this.getValue(),
+        langue: i18next.language,
+      };
+
+      // Serialize as x-www-form-urlencoded
+      const formBody = Object.entries(data)
+        .map(([key, value]) => encodeURIComponent(key) + "=" + encodeURIComponent(value))
+        .join("&");
+
+      // Send to backend
+      try {
+        const response = await fetch(`${this.config.backendBaseUrl}/enregistrerRequete.do`, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formBody,
+        });
+        if (response.ok) {
+          modal.remove();
+          // Optionally show a success notification
+          this.showNotification("saveQuery", i18next.t("yasqe.custom.saveSuccess") || "Query saved!");
+        } else {
+          this.showNotification("saveQuery", i18next.t("yasqe.custom.saveFail") || "Failed to save query.");
+        }
+      } catch (e) {
+        this.showNotification("saveQuery", i18next.t("yasqe.custom.saveFail") || "Failed to save query.");
+      }
+    });
   }
 
   private async showSavedQueriesPopup(anchorBtn: HTMLElement) {
