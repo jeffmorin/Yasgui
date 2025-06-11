@@ -198,15 +198,17 @@ export class Yasqe extends CodeMirror {
       }
     }
 
-    const requetesEnregistreesBtn = document.createElement("button");
-    requetesEnregistreesBtn.className = "yasqe_custom";
-    requetesEnregistreesBtn.title = i18next.t("yasqe.custom.savedQueries");
-    requetesEnregistreesBtn.innerHTML = `<span>&#x1F4C1;</span>`;
-    requetesEnregistreesBtn.addEventListener("click", (event: MouseEvent) => {
-      event.stopPropagation();
-      this.showSavedQueriesPopup(requetesEnregistreesBtn);
-    });
-    buttons.appendChild(requetesEnregistreesBtn);
+    if (this.config.backendBaseUrl) {
+      const requetesEnregistreesBtn = document.createElement("button");
+      requetesEnregistreesBtn.className = "yasqe_custom";
+      requetesEnregistreesBtn.title = i18next.t("yasqe.custom.savedQueries");
+      requetesEnregistreesBtn.innerHTML = `<span>&#x1F4C1;</span>`;
+      requetesEnregistreesBtn.addEventListener("click", (event: MouseEvent) => {
+        event.stopPropagation();
+        this.showSavedQueriesPopup(requetesEnregistreesBtn);
+      });
+      buttons.appendChild(requetesEnregistreesBtn);
+    }
 
     /**
      * draw share link button
@@ -391,9 +393,9 @@ export class Yasqe extends CodeMirror {
     if (savedQueries.length === 0 && !popup.innerText) {
       popup.innerText = i18next.t("yasqe.custom.savedQueries.empty");
     } else {
-      // Make sure yasgui is available in the current scope
-      // You may need to pass yasgui as a parameter to this function or access it globally
+      // Make sure window.yasgui is available in the current scope
       const yasgui = (window as any).yasgui;
+      console.log(yasgui);
       savedQueries.forEach((q) => {
         const item = document.createElement("div");
         item.style.cursor = "pointer";
