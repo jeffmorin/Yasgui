@@ -365,6 +365,17 @@ export class Yasqe extends CodeMirror {
     // Remove any existing modal
     document.querySelectorAll(".yasqe_saveQueryModal").forEach((el) => el.remove());
 
+    // Get the current tab name if available
+    let defaultQueryName = "";
+    // Try to get the tab name from Yasgui if available
+    const yasgui = (window as any).yasgui;
+    if (yasgui && typeof yasgui.getTab === "function" && typeof yasgui.selectTabId === "function") {
+      const tab = yasgui.getTab(yasgui.persistentConfig.getActiveId());
+      if (tab && typeof tab.getName === "function") {
+        defaultQueryName = tab.getName();
+      }
+    }
+
     // Modal HTML (Bootstrap 4/5 compatible)
     const modal = document.createElement("div");
     modal.className = "modal yasqe_saveQueryModal";
@@ -377,10 +388,10 @@ export class Yasqe extends CodeMirror {
             <button type="button" class="close" aria-label="Close">&times;</button>
           </div>
           <div class="modal-body">
-            <div class="form-group">
-              <label>${i18next.t("yasqe.custom.queryName") || "Query Name"}</label>
-              <input type="text" class="form-control" id="yasqe-save-query-name" placeholder="${i18next.t("yasqe.custom.queryNamePlaceholder") || "Enter query name"}">
-            </div>
+            <label>${i18next.t("yasqe.custom.queryName") || "Query Name"}</label>
+            <input type="text" class="form-control" id="yasqe-save-query-name"
+              placeholder="${i18next.t("yasqe.custom.queryNamePlaceholder") || "Enter query name"}"
+              value="${defaultQueryName ? defaultQueryName.replace(/"/g, "&quot;") : ""}">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary btn-cancel">${i18next.t("yasqe.custom.cancel") || "Cancel"}</button>
@@ -427,6 +438,19 @@ export class Yasqe extends CodeMirror {
         });
         if (response.ok) {
           modal.remove();
+          // Update the tab name if possible
+          const yasgui = (window as any).yasgui;
+          if (
+            yasgui &&
+            typeof yasgui.getTab === "function" &&
+            typeof yasgui.persistentConfig?.getActiveId === "function"
+          ) {
+            const tabId = yasgui.persistentConfig.getActiveId();
+            const tab = yasgui.getTab(tabId);
+            if (tab && typeof tab.setName === "function") {
+              tab.setName(queryName);
+            }
+          }
           // Optionally show a success notification
           this.showNotification("saveQuery", i18next.t("yasqe.custom.saveSuccess") || "Query saved!");
         } else {
@@ -464,6 +488,11 @@ export class Yasqe extends CodeMirror {
     popup.style.width = "420px";
     popup.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
 
+    // Calculate remaining height in the window
+    const remainingHeight = window.innerHeight - (rect.bottom + window.scrollY) - 16; // 16px margin
+    popup.style.maxHeight = `${remainingHeight}px`;
+    popup.style.overflowY = "auto";
+
     let savedQueries: RequeteEnregistree[] = [];
     try {
       const response = await fetch(`${baseUrl}/listeRequetes.do`);
@@ -476,13 +505,19 @@ export class Yasqe extends CodeMirror {
       popup.innerText = i18next.t("yasqe.custom.savedQueries.fail");
     }
 
+    // Filter queries by interface language
+    const currentLang = this.config.interfaceLanguage || i18next.language;
+    console.log("Current interface language:", currentLang);
+    savedQueries = savedQueries.filter((q) => q.langue.toString().toLowerCase() === currentLang.toLowerCase());
+
     if (savedQueries.length === 0 && !popup.innerText) {
       popup.innerText = i18next.t("yasqe.custom.savedQueries.empty");
     } else {
       // Make sure window.yasgui is available in the current scope
       const yasgui = (window as any).yasgui;
-      console.log(yasgui);
+      //console.log(yasgui);
       savedQueries.forEach((q) => {
+        //console.log(q);
         const item = document.createElement("div");
         item.style.cursor = "pointer";
         item.style.padding = "8px 0";
