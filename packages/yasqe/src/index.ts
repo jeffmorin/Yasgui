@@ -181,7 +181,7 @@ export class Yasqe extends CodeMirror {
     return persistenceId(this);
   }
 
-  private drawButtons() {
+  private async drawButtons() {
     const buttons = document.createElement("div");
     buttons.className = "yasqe_buttons";
     this.getWrapperElement().appendChild(buttons);
@@ -199,13 +199,26 @@ export class Yasqe extends CodeMirror {
     }
 
     if (this.config.backendBaseUrl) {
+      // Check with backend if saving queries is allowed
+      let canSave = false;
+      try {
+        const response = await fetch(`${this.config.backendBaseUrl}/peutEnregistrerRequete.do`);
+        if (response.ok) {
+          canSave = await response.json(); // expects boolean true/false
+        }
+      } catch (e) {
+        canSave = false;
+      }
+
       // --- Save Query Button ---
-      const saveQueryBtn = document.createElement("button");
-      saveQueryBtn.className = "yasqe_custom";
-      saveQueryBtn.title = i18next.t("yasqe.custom.saveQuery");
-      saveQueryBtn.innerHTML = `<span class="glyphicon glyphicon-floppy-disk"></span>`;
-      saveQueryBtn.onclick = () => this.showSaveQueryModal();
-      buttons.appendChild(saveQueryBtn);
+      if (canSave) {
+        const saveQueryBtn = document.createElement("button");
+        saveQueryBtn.className = "yasqe_custom";
+        saveQueryBtn.title = i18next.t("yasqe.custom.saveQuery");
+        saveQueryBtn.innerHTML = `<span class="glyphicon glyphicon-floppy-disk"></span>`;
+        saveQueryBtn.onclick = () => this.showSaveQueryModal();
+        buttons.appendChild(saveQueryBtn);
+      }
 
       // --- List Queries Button ---
       const requetesEnregistreesBtn = document.createElement("button");
