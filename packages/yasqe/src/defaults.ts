@@ -133,6 +133,11 @@ SELECT * WHERE {
     prefixCcApi: prefixCcApi,
     backendBaseUrl: undefined as unknown as string,
     interfaceLanguage: undefined as unknown as string,
+    queryManagement: {
+      list: "queries/list.do",
+      save: "queries/save.do",
+      canSave: "queries/canSave.do",
+    },
   };
   const requestConfig: PlainRequestConfig = {
     queryArgument: undefined, //undefined means: get query argument based on query mode

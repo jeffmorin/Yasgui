@@ -202,7 +202,7 @@ export class Yasqe extends CodeMirror {
       // Check with backend if saving queries is allowed
       let canSave = false;
       try {
-        const response = await fetch(`${this.config.backendBaseUrl}/peutEnregistrerRequete.do`);
+        const response = await fetch(`${this.config.backendBaseUrl}/${this.config.queryManagement.canSave}`);
         if (response.ok) {
           canSave = await response.json(); // expects boolean true/false
         }
@@ -444,7 +444,7 @@ export class Yasqe extends CodeMirror {
 
       // Send to backend
       try {
-        const response = await fetch(`${this.config.backendBaseUrl}/enregistrerRequete.do`, {
+        const response = await fetch(`${this.config.backendBaseUrl}/${this.config.queryManagement.save}`, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: formBody,
@@ -508,7 +508,7 @@ export class Yasqe extends CodeMirror {
 
     let savedQueries: RequeteEnregistree[] = [];
     try {
-      const response = await fetch(`${baseUrl}/listeRequetes.do`);
+      const response = await fetch(`${baseUrl}/${this.config.queryManagement.list}`);
       if (response.ok) {
         savedQueries = await response.json();
       } else {
@@ -1286,7 +1286,15 @@ export interface Config extends Partial<CodeMirror.EditorConfiguration> {
   prefixCcApi: string; // the suggested default prefixes URL API getter
   backendBaseUrl: string; // The base URL for the backend, used for saved queries and other backend interactions
   interfaceLanguage: string; // The language of the interface, e.g. 'en' for English
+  queryManagement: QueryManagementEndpoints;
 }
+
+export interface QueryManagementEndpoints {
+  list: string;
+  save: string;
+  canSave: string;
+}
+
 export interface PersistentConfig {
   query: string;
   editorHeight: string;
