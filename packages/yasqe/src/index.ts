@@ -536,6 +536,7 @@ export class Yasqe extends CodeMirror {
         item.style.padding = "8px 0";
         item.innerHTML = `<strong>${q.nom}</strong>`;
         item.onclick = () => {
+          popup.remove();
           const event = new CustomEvent("yasqe:newTabWithQuery", {
             detail: {
               query: q.requete,
@@ -559,9 +560,7 @@ export class Yasqe extends CodeMirror {
           } else {
             console.warn("yasgui is not defined or does not support addTab/selectTab");
           }
-
           window.dispatchEvent(event);
-          popup.remove();
         };
         popup.appendChild(item);
       });
