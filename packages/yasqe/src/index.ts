@@ -442,6 +442,7 @@ export class Yasqe extends CodeMirror {
           </div>
           <div class="modal-body">
             <label>${i18next.t("yasqe.custom.queryName") || "Query Name"}</label>
+            <p>${i18next.t("yasqe.custom.queryName.warning") || "If a query with the same name exists, it will be overwritten."}</p>
             <input type="text" class="form-control" id="yasqe-save-query-name"
               placeholder="${i18next.t("yasqe.custom.queryNamePlaceholder") || "Enter query name"}"
               value="${defaultQueryName ? defaultQueryName.replace(/"/g, "&quot;") : ""}">
