@@ -251,6 +251,10 @@ export class Yasqe extends CodeMirror {
         }
       });
 
+      // SVG for copy icon
+      const copyIconSvg =
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>';
+
       const showSharePopup = (event: MouseEvent | KeyboardEvent) => {
         event.stopPropagation();
         let popup: HTMLDivElement | undefined = document.createElement("div");
@@ -282,8 +286,45 @@ export class Yasqe extends CodeMirror {
 
         var inputWrapper = document.createElement("div");
         inputWrapper.className = "inputWrapper";
-
+        inputWrapper.style.display = "flex";
+        inputWrapper.style.alignItems = "center";
+        input.style.flex = "1";
         inputWrapper.appendChild(input);
+
+        // --- Copy to clipboard button ---
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "yasqe_btn yasqe_btn-sm copy";
+        copyBtn.title = i18next.t("yasqe.query.copyLink") || "Copy link";
+        copyBtn.innerHTML = copyIconSvg;
+        copyBtn.style.marginLeft = "4px";
+        copyBtn.onclick = () => {
+          // Clipboard API fallback
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(input.value).then(() => {
+              copyBtn.classList.add("copied");
+              copyBtn.title = i18next.t("yasqe.query.copied") || "Copied!";
+              setTimeout(() => {
+                copyBtn.classList.remove("copied");
+                copyBtn.title = i18next.t("yasqe.query.copyLink") || "Copy link";
+              }, 1200);
+            });
+          } else {
+            // fallback for older browsers or non-secure context
+            input.select();
+            try {
+              document.execCommand("copy");
+              copyBtn.classList.add("copied");
+              copyBtn.title = i18next.t("yasqe.query.copied") || "Copied!";
+              setTimeout(() => {
+                copyBtn.classList.remove("copied");
+                copyBtn.title = i18next.t("yasqe.query.copyLink") || "Copy link";
+              }, 1200);
+            } catch (err) {
+              copyBtn.title = i18next.t("yasqe.query.copyFailed") || "Copy failed";
+            }
+          }
+        };
+        inputWrapper.appendChild(copyBtn);
 
         popup.appendChild(inputWrapper);
 
@@ -307,7 +348,6 @@ export class Yasqe extends CodeMirror {
               (err) => {
                 const errSpan = document.createElement("span");
                 errSpan.className = "shortlinkErr";
-                // Throwing a string or an object should work
                 let textContent = "An error has occurred";
                 if (typeof err === "string" && err.length !== 0) {
                   textContent = err;
