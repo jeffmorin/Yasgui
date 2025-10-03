@@ -202,9 +202,14 @@ export class Yasqe extends CodeMirror {
       // Check with backend if saving queries is allowed
       let canSave = false;
       try {
-        const response = await fetch(`${this.config.backendBaseUrl}/${this.config.queryManagement.canSave}`);
+        const response = await fetch(`${this.config.backendBaseUrl}/${this.config.queryManagement.canSave}`, {
+          method: "GET",
+          headers: {
+            Accept: "text/plain",
+          },
+        });
         if (response.ok) {
-          canSave = await response.json(); // expects boolean true/false
+          canSave = (await response.text()).toLowerCase() === "true"; // expects boolean true/false
         }
       } catch (e) {
         canSave = false;
