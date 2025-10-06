@@ -88,5 +88,6 @@ export default function initialize(config?: Partial<Config<CatalogueItem>>): Con
     autoAddOnInit: true,
     requestConfig: Yasqe.defaults.requestConfig,
     contextMenuContainer: undefined,
+    showCurlButton: config?.showCurlButton ?? true,
   };
 }

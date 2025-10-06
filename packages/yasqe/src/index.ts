@@ -361,17 +361,19 @@ export class Yasqe extends CodeMirror {
           };
         }
 
-        const curlBtn = document.createElement("button");
-        popupInputButtons.push(curlBtn);
-        curlBtn.innerText = "cURL";
-        curlBtn.className = "yasqe_btn yasqe_btn-sm curl";
-        popup.appendChild(curlBtn);
-        curlBtn.onclick = () => {
-          popupInputButtons.forEach((button) => (button.disabled = true));
-          input.value = this.getAsCurlString();
-          input.focus();
-          popup?.appendChild(curlBtn);
-        };
+        if (this.config.showCurlButton) {
+          const curlBtn = document.createElement("button");
+          popupInputButtons.push(curlBtn);
+          curlBtn.innerText = "cURL";
+          curlBtn.className = "yasqe_btn yasqe_btn-sm curl";
+          popup.appendChild(curlBtn);
+          curlBtn.onclick = () => {
+            popupInputButtons.forEach((button) => (button.disabled = true));
+            input.value = this.getAsCurlString();
+            input.focus();
+            popup?.appendChild(curlBtn);
+          };
+        }
 
         const svgPos = svgShare.getBoundingClientRect();
         popup.style.top = svgShare.offsetTop + svgPos.height + "px";
@@ -1310,6 +1312,7 @@ export interface Config extends Partial<CodeMirror.EditorConfiguration> {
   persistenceId: ((yasqe: Yasqe) => string) | string | undefined | null;
   persistencyExpire: number; //seconds
   showQueryButton: boolean;
+  showCurlButton: boolean;
   requestConfig: RequestConfig<Yasqe> | ((yasqe: Yasqe) => RequestConfig<Yasqe>);
   pluginButtons: (() => HTMLElement[] | HTMLElement) | undefined;
   //Addon specific addon ts defs, or missing props from codemirror conf

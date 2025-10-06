@@ -125,6 +125,7 @@ SELECT * WHERE {
     persistencyExpire: 60 * 60 * 24 * 30,
 
     showQueryButton: true,
+    showCurlButton: true,
 
     hintConfig: {},
     resizeable: true,
