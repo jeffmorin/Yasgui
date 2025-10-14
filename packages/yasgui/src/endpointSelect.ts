@@ -19,6 +19,7 @@ interface AutocompleteItem<T> {
 }
 export interface CatalogueItem {
   endpoint: string;
+  label?: string; // repository name
   type?: "history";
 }
 
@@ -66,6 +67,7 @@ export class EndpointSelect extends EventEmitter {
   private value: string;
   private history: CatalogueItem[];
   private inputField!: HTMLInputElement;
+  private selectedLabel?: string;
   constructor(initialValue: string, container: HTMLDivElement, options: EndpointSelectConfig, history: string[]) {
     super();
     this.container = container;
@@ -134,52 +136,32 @@ export class EndpointSelect extends EventEmitter {
       resultItem: {
         content: (data, source) => {
           const endpoint = sanitize(data.value.endpoint);
-
-          // Custom handling of items with history, these are able to be removed
-          if (data.value.type && data.value.type === "history") {
-            // Add a container to make folding work correctly
-            const resultsContainer = document.createElement("div");
-            // Match is highlighted text
-            resultsContainer.innerHTML = parse(endpoint, createHighlights(endpoint, this.inputField.value)).reduce(
-              (current, object) => (object.highlight ? current + object.text.bold() : current + object.text),
-              "",
-            );
-            source.append(resultsContainer);
-
-            // Remove button
-            const removeBtn = document.createElement("button");
-            removeBtn.textContent = "✖";
-            addClass(removeBtn, "removeItem");
-            removeBtn.addEventListener("mousedown", (event) => {
-              this.history = this.history.filter((item) => item.endpoint !== endpoint);
-              this.emit(
-                "remove",
-                this.value,
-                this.history.map((value) => value.endpoint),
-              );
-              source.remove();
-              event.stopPropagation();
-            });
-
-            source.appendChild(removeBtn);
-          } else {
-            // Add our own field highlighting
-            const matches: RenderedCatalogueItem<CatalogueItem> = { matches: {} };
-            for (const key of [...this.options.keys]) {
-              const val = data.value[key];
-              if (val) {
-                matches.matches[key] = parse(val, createHighlights(val, this.inputField.value));
-              }
-            }
-            this.options.renderItem({ ...data, ...matches }, source);
+          const label = data.value.label ? sanitize(data.value.label) : undefined;
+          // Show both label and endpoint in the dropdown
+          const container = document.createElement("div");
+          container.style.display = "flex";
+          container.style.flexDirection = "column";
+          if (label) {
+            const labelSpan = document.createElement("span");
+            labelSpan.textContent = label;
+            labelSpan.style.fontWeight = "bold";
+            container.appendChild(labelSpan);
           }
+          const endpointSpan = document.createElement("span");
+          endpointSpan.textContent = endpoint;
+          endpointSpan.style.fontSize = "0.85em";
+          endpointSpan.style.color = "#888";
+          container.appendChild(endpointSpan);
+          source.appendChild(container);
         },
         element: "li",
       },
       onSelection: (feedback) => {
         const item = feedback.selection.value;
         this.value = item.endpoint;
-        this.inputField.value = this.value;
+        this.selectedLabel = item.label || undefined;
+        // Always show label in the input if available, else fallback to endpoint
+        this.inputField.value = this.selectedLabel || item.endpoint;
         this.emit(
           "select",
           this.value,
@@ -205,6 +187,7 @@ export class EndpointSelect extends EventEmitter {
           //we have typed exactly the same value the one from the suggestion list
           //So, just close the suggestion list
           this.clearListSuggestionList();
+          this.inputField.value = this.selectedLabel || this.value;
           this.inputField.blur();
           return;
         }
@@ -213,12 +196,11 @@ export class EndpointSelect extends EventEmitter {
           this.inputField.blur();
           return;
         }
-        if (
-          this.options.getData().find((i) => i.endpoint === this.inputField.value) ||
-          this.history.find((item) => item.endpoint === this.inputField.value)
-        ) {
-          //the value you typed is already in our catalogue or in our history
-          this.value = target.value;
+        const found = [...this.options.getData(), ...this.history].find((i) => i.endpoint === this.inputField.value);
+        if (found) {
+          this.value = found.endpoint;
+          this.selectedLabel = found.label || undefined;
+          this.inputField.value = this.selectedLabel || found.endpoint;
           this.clearListSuggestionList();
           this.emit(
             "select",
@@ -229,6 +211,7 @@ export class EndpointSelect extends EventEmitter {
           return;
         }
         this.value = target.value;
+        this.selectedLabel = undefined;
         this.history.push({ endpoint: target.value, type: "history" });
         this.emit(
           "select",
@@ -241,7 +224,7 @@ export class EndpointSelect extends EventEmitter {
       // Blur and set value on enter
       if (event.keyCode === 27) {
         this.inputField.blur();
-        this.inputField.value = this.value;
+        this.inputField.value = this.selectedLabel || this.value;
         this.clearListSuggestionList();
       }
 
@@ -275,7 +258,7 @@ export class EndpointSelect extends EventEmitter {
         )
           return;
         this.clearListSuggestionList();
-        this.inputField.value = this.value;
+        this.inputField.value = this.selectedLabel || this.value;
       }
     });
   }
@@ -291,12 +274,15 @@ export class EndpointSelect extends EventEmitter {
         return { endpoint, type: "history" };
       });
     }
-    // Force focus when the endpoint is open
+    // Find label if available
+    const found = [...this.history, ...this.options.getData()].find((i) => i.endpoint === endpoint);
+    this.selectedLabel = found && found.label ? found.label : undefined;
+    const display = this.selectedLabel || endpoint;
+    // Always show label in the input if available
     if (this.inputField === document.activeElement) {
       this.inputField.focus();
     } else {
-      // Only set when the user is not using the widget at this time
-      this.inputField.value = endpoint;
+      this.inputField.value = display;
     }
   }
   public destroy() {
