@@ -449,6 +449,7 @@ export class Yasr extends EventEmitter {
     this.documentationLink.href = "//docs.triply.cc/yasgui/";
     this.documentationLink.target = "_blank";
     this.documentationLink.rel = "noopener noreferrer";
+    this.documentationLink.id = "yasr_help_button";
     this.headerEl.appendChild(this.documentationLink); // We can do this as long as the help-element is the last item in the row
   }
   download() {
