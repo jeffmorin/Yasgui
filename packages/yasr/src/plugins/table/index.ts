@@ -233,6 +233,33 @@ export default class Table implements Plugin<PluginConfig> {
       onResize: this.persistentConfig.isEllipsed !== false && this.setEllipsisHandlers,
       headerOnly: true,
     });
+    // Ensure yasr's own `.grip-padding` SCSS rules (defined in this plugin's index.scss)
+    // take precedence over the column-resizer's injected rule. ColumnResizer injects
+    // a `.grip-padding { padding-left:0 !important }` rule into the head at init time,
+    // which would override our styling. Append a small style element after the
+    // resizer is created so our desired paddings are used by default.
+    try {
+      const head = document.querySelector("head");
+      if (head) {
+        const overrideCss = `
+          .grip-padding > tbody > tr > td, .grip-padding > tbody > tr > th {
+            padding-left: 10px !important;
+            padding-right: 8px !important;
+          }
+        `;
+        const STYLE_ID = "yasr-grip-padding-override";
+        // only append once (draw() can be called multiple times)
+        if (!document.getElementById(STYLE_ID)) {
+          const styleEl = document.createElement("style");
+          styleEl.type = "text/css";
+          styleEl.id = STYLE_ID;
+          styleEl.appendChild(document.createTextNode(overrideCss));
+          head.appendChild(styleEl);
+        }
+      }
+    } catch (e) {
+      // defensive: if DOM isn't available or append fails, silently continue
+    }
     // DataTables uses the rendered style to decide the widths of columns.
     // Before a draw remove the ellipseTable styling
     if (this.persistentConfig.isEllipsed !== false) {
