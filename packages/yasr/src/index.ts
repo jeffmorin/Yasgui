@@ -358,7 +358,16 @@ export class Yasr extends EventEmitter {
     this.drawDocumentationButton();
   }
   private downloadBtn: HTMLAnchorElement | undefined;
+  private downloadSelectBtn: HTMLAnchorElement | undefined;
+  private selectMenuEl: HTMLDivElement | undefined;
+  private selectMenuCloseHandler: ((e: MouseEvent) => void) | undefined;
+  private selectMenuContainer: HTMLDivElement | undefined;
   private drawDownloadIcon() {
+    // draw a button that requests SELECT results as application/sparql-results+json
+    // and triggers a browser download of the response. Placed to the left of
+    // the regular download button so users can explicitly download SELECT JSON.
+    this.drawSelectDownloadIcon();
+
     this.downloadBtn = document.createElement("a");
     addClass(this.downloadBtn, "yasr_btn", "yasr_downloadIcon", "btn_icon");
     this.downloadBtn.download = ""; // should default to the file name of the blob
@@ -380,7 +389,173 @@ export class Yasr extends EventEmitter {
       }
     });
 
+    // Hide the original download button from the UI — kept in DOM for
+    // backwards-compatibility of any code that may reference it.
+    this.downloadBtn.style.display = "none";
     this.headerEl.appendChild(this.downloadBtn);
+  }
+
+  private drawSelectDownloadIcon() {
+    this.downloadSelectBtn = document.createElement("a");
+    addClass(this.downloadSelectBtn, "yasr_btn", "yasr_downloadSelectIcon", "btn_icon");
+    this.downloadSelectBtn.setAttribute("aria-label", "Download SELECT results (JSON)");
+    this.downloadSelectBtn.setAttribute("tabindex", "0");
+    this.downloadSelectBtn.setAttribute("role", "button");
+    const iconEl = drawSvgStringAsElement(drawFontAwesomeIconAsSvg(faDownload));
+    iconEl.setAttribute("aria-hidden", "true");
+    this.downloadSelectBtn.appendChild(iconEl);
+    this.downloadSelectBtn.addEventListener("click", () => {
+      if (hasClass(this.downloadSelectBtn, "disabled")) return;
+      this.toggleSelectMenu();
+    });
+    this.downloadSelectBtn.addEventListener("keydown", (event) => {
+      if (event.code === "Space" || event.code === "Enter") {
+        if (hasClass(this.downloadSelectBtn, "disabled")) return;
+        this.toggleSelectMenu();
+      }
+    });
+
+    // Insert before the main download button (if it exists), otherwise append
+    // to the header so it appears left of the regular download button.
+    // Wrap the button in a positioned container so the dropdown can be
+    // absolutely positioned relative to the button.
+    const container = document.createElement("div");
+    container.className = "yasr_select_download_wrapper";
+    container.style.position = "relative";
+    container.style.display = "inline-block";
+    container.appendChild(this.downloadSelectBtn);
+    this.headerEl.appendChild(container);
+    this.selectMenuContainer = container;
+  }
+
+  private toggleSelectMenu() {
+    if (this.selectMenuEl) {
+      this.hideSelectMenu();
+    } else {
+      this.showSelectMenu();
+    }
+  }
+
+  private showSelectMenu() {
+    if (!this.downloadSelectBtn) return;
+    // create menu element
+    const menu = document.createElement("div");
+    menu.className = "yasr_select_download_menu";
+    menu.style.position = "absolute";
+    menu.style.background = "#fff";
+    menu.style.border = "1px solid #ccc";
+    menu.style.padding = "4px";
+    menu.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+    menu.style.zIndex = "9999";
+    // create options
+    const options: { label: string; accept: string; ext: string }[] = [
+      { label: i18next.t("yasr.response.download.json"), accept: "application/sparql-results+json", ext: "json" },
+      { label: i18next.t("yasr.response.download.xml"), accept: "application/sparql-results+xml", ext: "xml" },
+      { label: i18next.t("yasr.response.download.csv"), accept: "text/csv", ext: "csv" },
+      { label: i18next.t("yasr.response.download.tsv"), accept: "text/tab-separated-values", ext: "tsv" },
+      { label: i18next.t("yasr.response.download.srt"), accept: "application/sparql-results+thrift", ext: "srt" },
+    ];
+    options.forEach((opt) => {
+      const btn = document.createElement("button");
+      btn.className = "yasr_select_download_option";
+      btn.type = "button";
+      btn.style.display = "block";
+      btn.style.width = "100%";
+      btn.style.border = "none";
+      btn.style.background = "transparent";
+      btn.style.textAlign = "left";
+      btn.style.padding = "6px 10px";
+      btn.style.cursor = "pointer";
+      btn.textContent = opt.label;
+      btn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        this.hideSelectMenu();
+        await this.downloadWithAccept(opt.accept, opt.ext);
+      });
+      btn.addEventListener("keydown", async (e: KeyboardEvent) => {
+        if (e.code === "Enter" || e.code === "Space") {
+          e.preventDefault();
+          this.hideSelectMenu();
+          await this.downloadWithAccept(opt.accept, opt.ext);
+        }
+      });
+      menu.appendChild(btn);
+    });
+
+    // position menu inside the container so it's positioned relative to
+    // the button. Place it directly under the button using `top:100%`.
+    if (this.selectMenuContainer) {
+      menu.style.left = "-3em";
+      menu.style.top = "100%";
+      menu.style.minWidth = this.downloadSelectBtn?.getBoundingClientRect().width + "px";
+      this.selectMenuContainer.appendChild(menu);
+      this.selectMenuEl = menu;
+    } else {
+      // Fallback to body positioning if container missing
+      const rect = this.downloadSelectBtn!.getBoundingClientRect();
+      menu.style.left = rect.left + window.scrollX + "px";
+      menu.style.top = rect.bottom + window.scrollY + "px";
+      document.body.appendChild(menu);
+      this.selectMenuEl = menu;
+    }
+
+    // close when clicking outside
+    this.selectMenuCloseHandler = (evt: MouseEvent) => {
+      if (!this.selectMenuEl) return;
+      const target = evt.target as Node;
+      if (target && this.selectMenuEl.contains(target)) return;
+      if (target && this.downloadSelectBtn && this.downloadSelectBtn.contains(target)) return;
+      this.hideSelectMenu();
+    };
+    document.addEventListener("mousedown", this.selectMenuCloseHandler, true);
+  }
+
+  private hideSelectMenu() {
+    if (this.selectMenuEl) {
+      this.selectMenuEl.remove();
+      this.selectMenuEl = undefined;
+    }
+    if (this.selectMenuCloseHandler) {
+      document.removeEventListener("mousedown", this.selectMenuCloseHandler, true);
+      this.selectMenuCloseHandler = undefined;
+    }
+  }
+
+  private async downloadWithAccept(acceptHeader: string, ext: string) {
+    const urlGetter = this.config.getPlainQueryLinkToEndpoint;
+    if (!urlGetter) return;
+    const url = urlGetter();
+    if (!url) return;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: acceptHeader,
+        },
+      });
+      if (!response.ok) {
+        const txt = await response.text().catch(() => "");
+        console.error("Failed to fetch results for download", response.status, txt);
+        return;
+      }
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const mockLink = document.createElement("a");
+      mockLink.href = downloadUrl;
+      const baseName = this.config.getDownloadFileName?.() || "results";
+      mockLink.download = `${baseName}.${ext}`;
+      mockLink.click();
+      setTimeout(() => {
+        try {
+          window.URL.revokeObjectURL(downloadUrl);
+        } catch (e) {
+          // ignore
+        }
+      }, 1500);
+    } catch (e) {
+      console.error("Error downloading results:", e);
+    }
   }
   private dataElement!: HTMLDivElement;
   private drawResponseInfo() {
@@ -438,6 +613,23 @@ export class Yasr extends EventEmitter {
       }
       this.downloadBtn.title = i18next.t("yasr.download.notSupported");
       addClass(this.downloadBtn, "disabled");
+    }
+    // Enable/disable the SELECT->JSON download button depending on whether
+    // a plain GET link to the current query is available.
+    if (this.downloadSelectBtn) {
+      try {
+        const urlGetter = this.config.getPlainQueryLinkToEndpoint;
+        const hasLink = typeof urlGetter === "function" && !!urlGetter();
+        if (hasLink) {
+          removeClass(this.downloadSelectBtn, "disabled");
+          this.downloadSelectBtn.title = i18next.t("yasr.response.download");
+        } else {
+          addClass(this.downloadSelectBtn, "disabled");
+          this.downloadSelectBtn.title = i18next.t("yasr.download.notSupported") || "Download not available";
+        }
+      } catch (e) {
+        addClass(this.downloadSelectBtn, "disabled");
+      }
     }
   }
 
