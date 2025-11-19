@@ -485,9 +485,9 @@ export class Yasr extends EventEmitter {
     // position menu inside the container so it's positioned relative to
     // the button. Place it directly under the button using `top:100%`.
     if (this.selectMenuContainer) {
-      menu.style.left = "-3em";
+      menu.style.left = "-6em";
       menu.style.top = "100%";
-      menu.style.minWidth = this.downloadSelectBtn?.getBoundingClientRect().width + "px";
+      menu.style.width = "8em";
       this.selectMenuContainer.appendChild(menu);
       this.selectMenuEl = menu;
     } else {
