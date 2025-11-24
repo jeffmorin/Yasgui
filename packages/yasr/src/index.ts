@@ -638,7 +638,7 @@ export class Yasr extends EventEmitter {
     this.documentationLink = document.createElement("a");
     addClass(this.documentationLink, "yasr_btn", "yasr_external_ref_btn");
     this.documentationLink.appendChild(drawSvgStringAsElement(drawFontAwesomeIconAsSvg(faQuestionCircle)));
-    this.documentationLink.href = "//docs.triply.cc/yasgui/";
+    this.documentationLink.href = "/thessa/contenu/contenu.do?chemin=%2fclient%2fdocumentation";
     this.documentationLink.target = "_blank";
     this.documentationLink.rel = "noopener noreferrer";
     this.documentationLink.id = "yasr_help_button";

@@ -61,7 +61,7 @@ export default class Table implements Plugin<PluginConfig> {
         onResize: () => {};
       }
     | undefined;
-  public helpReference = "https://docs.triply.cc/yasgui#table";
+  public helpReference = "/thessa/contenu/contenu.do?chemin=%2fclient%2fdocumentation#table";
   public label = i18next.t("yasr.table");
   public priority = 10;
   public getIcon() {

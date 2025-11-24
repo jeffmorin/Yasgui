@@ -28,7 +28,7 @@ export default class Response implements Plugin<PluginConfig> {
   private yasr: Yasr;
   label = i18next.t("yasr.response");
   priority = 2;
-  helpReference = "https://docs.triply.cc/yasgui#response";
+  helpReference = "/thessa/contenu/contenu.do?chemin=%2fclient%2fdocumentation#response";
   private config: DeepReadonly<PluginConfig>;
   private overLay: HTMLDivElement | undefined;
   private cm: CodeMirror.Editor | undefined;
