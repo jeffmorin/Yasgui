@@ -637,8 +637,12 @@ export class Yasr extends EventEmitter {
   private drawDocumentationButton() {
     this.documentationLink = document.createElement("a");
     addClass(this.documentationLink, "yasr_btn", "yasr_external_ref_btn");
-    this.documentationLink.appendChild(drawSvgStringAsElement(drawFontAwesomeIconAsSvg(faQuestionCircle)));
-    this.documentationLink.href = "/thessa/contenu/contenu.do?chemin=%2fclient%2fdocumentation";
+    // this.documentationLink.appendChild(drawSvgStringAsElement(drawFontAwesomeIconAsSvg(faQuestionCircle)));
+    const docLabel = document.createElement("div");
+    docLabel.textContent = i18next.t("yasr.documentation");
+    docLabel.className = "yasr_doc_label";
+    this.documentationLink.appendChild(docLabel);
+    this.documentationLink.href = "/thessa/contenu/afficher.do?chemin=%2fclient%2fdocumentation";
     this.documentationLink.target = "_blank";
     this.documentationLink.rel = "noopener noreferrer";
     this.documentationLink.id = "yasr_help_button";
