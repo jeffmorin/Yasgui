@@ -28,7 +28,7 @@ export default class Response implements Plugin<PluginConfig> {
   private yasr: Yasr;
   label = i18next.t("yasr.response");
   priority = 2;
-  helpReference = "/thessa/contenu/afficher.do?chemin=%2fclient%2fdocumentation#response";
+  helpReference = "";
   private config: DeepReadonly<PluginConfig>;
   private overLay: HTMLDivElement | undefined;
   private cm: CodeMirror.Editor | undefined;
@@ -41,6 +41,7 @@ export default class Response implements Plugin<PluginConfig> {
         ...yasr.config.plugins["response"].dynamicConfig,
       };
     }
+    this.helpReference = this.yasr.config.documentationLinkUrl + "#response";
   }
   // getDownloadInfo: getDownloadInfo
   canHandleResults() {

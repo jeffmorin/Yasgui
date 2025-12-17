@@ -24,5 +24,6 @@ export default function get(): Config {
     plugins: {},
     pluginOrder: ["table", "response"], // Default plugins, others are sorted alphabetically
     defaultPlugin: "table",
+    documentationLinkUrl: "https://www.w3.org/TR/sparql11-query/",
   };
 }

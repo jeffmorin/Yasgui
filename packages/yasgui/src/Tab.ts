@@ -449,6 +449,7 @@ export class Tab extends EventEmitter {
           );
         }
       },
+      documentationLinkUrl: this.yasgui.config.yasr.documentationLinkUrl,
       plugins: mapValues(this.persistentJson.yasr.settings.pluginsConfig, (conf) => ({
         dynamicConfig: conf,
       })),

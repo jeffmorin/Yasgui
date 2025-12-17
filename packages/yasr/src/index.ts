@@ -14,7 +14,7 @@ import Parser from "./parsers";
 export { default as Parser } from "./parsers";
 import { addScript, addCss, sanitize } from "./helpers";
 import * as faDownload from "@fortawesome/free-solid-svg-icons/faDownload";
-import * as faQuestionCircle from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
+//import * as faQuestionCircle from "@fortawesome/free-solid-svg-icons/faQuestionCircle";
 import i18next from "i18next";
 require("./main.scss");
 
@@ -642,7 +642,7 @@ export class Yasr extends EventEmitter {
     docLabel.textContent = i18next.t("yasr.documentation");
     docLabel.className = "yasr_doc_label";
     this.documentationLink.appendChild(docLabel);
-    this.documentationLink.href = "/thessa/contenu/afficher.do?chemin=%2fclient%2fdocumentation";
+    this.documentationLink.href = this.config.documentationLinkUrl;
     this.documentationLink.target = "_blank";
     this.documentationLink.rel = "noopener noreferrer";
     this.documentationLink.id = "yasr_help_button";
@@ -774,6 +774,7 @@ export interface Config {
   plugins: { [pluginName: string]: PluginConfig };
   pluginOrder: string[];
   defaultPlugin: string;
+  documentationLinkUrl: string;
 
   prefixes: Prefixes | ((yasr: Yasr) => Prefixes);
 

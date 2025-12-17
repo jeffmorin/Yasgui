@@ -61,7 +61,7 @@ export default class Table implements Plugin<PluginConfig> {
         onResize: () => {};
       }
     | undefined;
-  public helpReference = "/thessa/contenu/afficher.do?chemin=%2fclient%2fdocumentation#table";
+  public helpReference = "";
   public label = i18next.t("yasr.table");
   public priority = 10;
   public getIcon() {
@@ -69,8 +69,15 @@ export default class Table implements Plugin<PluginConfig> {
   }
   constructor(yasr: Yasr) {
     this.yasr = yasr;
-    //TODO read options from constructor
     this.config = Table.defaults();
+    if (yasr.config.plugins["table"] && yasr.config.plugins["table"].dynamicConfig) {
+      this.config = {
+        ...this.config,
+        ...yasr.config.plugins["table"].dynamicConfig,
+      };
+    }
+    this.helpReference = this.yasr.config.documentationLinkUrl + "#table";
+    console.log(this.helpReference);
   }
   public static defaults(): PluginConfig {
     return {
