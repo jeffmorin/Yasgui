@@ -87,7 +87,10 @@
     }
   ],
   "overrides": {
-    "brotli-size": "4.0.0"
+    "brotli-size": "4.0.0",
+    "bundlesize": {
+      "axios": "1.21.1"
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",
